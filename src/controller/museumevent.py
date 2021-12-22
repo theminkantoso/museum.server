@@ -17,7 +17,7 @@ class Event(Resource):
     def get(self, name):
         evt = Museumevent.find_by_name(name)
         if evt:
-            return evt.json()
+            return evt.json(), 200
         return {'message': 'Event not found'}, 404
 
     def post(self):
@@ -27,7 +27,7 @@ class Event(Resource):
         evt = Museumevent(**data)
         try:
             evt.save_to_db()
-            return {"message": "Event added."}, 201
+            return {"message": "Event added."}, 200
         except:
             return {"message": "An error occurred inserting the event."}, 500
 
@@ -36,7 +36,7 @@ class Event(Resource):
         evt = Museumevent.find_by_name(name)
         if evt:
             evt.delete_from_db()
-            return {'message': 'Event deleted.'}
+            return {'message': 'Event deleted.'}, 200
         return {'message': 'Event not found.'}, 404
 
     def put(self, name):
@@ -51,10 +51,10 @@ class Event(Resource):
             evt.EventDate = data['EventDate']
             evt.Poster = data['Poster']
             evt.save_to_db()
-            return evt.json()
+            return evt.json(), 200
         return {'message': 'Event not found.'}, 404
 
 class Events(Resource):
     def get(self):
         evt = {'events': list(map(lambda x: x.json(), Museumevent.query.all()))}
-        return evt
+        return evt, 200

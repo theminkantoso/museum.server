@@ -9,7 +9,7 @@ class artifactType(Resource) :
     def get(self, name):
         at = ArtifactType.find_by_name(name)
         if at:
-            return at.json()
+            return at.json(), 200
         return {'message': 'ArtifactType not found'}, 404
 
     def post(self):
@@ -24,13 +24,13 @@ class artifactType(Resource) :
             at.save_to_db()
         except:
             return {"message": "An error occurred inserting the artifactType."}, 500
-        return {"Message": "ArtifactType added. "}, 201
+        return {"Message": "ArtifactType added. "}, 200
 
     def delete(self, name):
         at = ArtifactType.find_by_name(name)
         if at:
             at.delete_from_db()
-            return {'message': 'ArtifactType deleted.'}
+            return {'message': 'ArtifactType deleted.'}, 200
         return {'message': 'ArtifactType not found.'}, 404
 
     def put(self, name):
@@ -40,11 +40,11 @@ class artifactType(Resource) :
         if at:
             at.Name = data['Name']
             at.save_to_db()
-            return at.json()
+            return at.json(), 200
         return {'message': 'ArtifactType not found.'}, 404
 
 class artifactTypes(Resource):
     def get(self):
-        return {'artifactTypes': list(map(lambda x: x.json(), ArtifactType.query.all()))}
+        return {'artifactTypes': list(map(lambda x: x.json(), ArtifactType.query.all()))}, 200
 
 

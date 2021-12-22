@@ -13,7 +13,7 @@ class souvenir(Resource):
     def get(self, name):
         sou = Souvenir.find_by_name(name)
         if sou:
-            return sou.json()
+            return sou.json(), 200
         return {'message': 'Souvenir not found'}, 404
 
     def post(self):
@@ -26,13 +26,13 @@ class souvenir(Resource):
             sou.save_to_db()
         except:
             return {"message": "An error occurred inserting the souvenir."}, 500
-        return {"Message": "Souvenir added. "}, 201
+        return {"Message": "Souvenir added. "}, 200
 
     def delete(self, name):
         sou = Souvenir.find_by_name(name)
         if sou:
             sou.delete_from_db()
-            return {'message': 'Souvenir deleted.'}
+            return {'message': 'Souvenir deleted.'}, 200
         return {'message': 'Souvenir not found.'}, 404
 
     def put(self, name):
@@ -46,10 +46,10 @@ class souvenir(Resource):
             sou.Discount = data['Discount']
             sou.ImageId = data['ImageId']
             sou.save_to_db()
-            return sou.json()
+            return sou.json(), 200
         return {'message': 'Souvenir not found.'}, 404
 
 class souvenirs(Resource):
     def get(self):
-        return {'souvenirs': list(map(lambda x: x.json(), Souvenir.query.all()))}
+        return {'souvenirs': list(map(lambda x: x.json(), Souvenir.query.all()))}, 200
 

@@ -14,7 +14,7 @@ class notification(Resource):
     def get(self, id):
         data = Notification.find_by_Id(id)
         if data:
-            return data.json()
+            return data.json(), 200
         return {'message': 'not found'}, 404
 
     def post(self):
@@ -24,7 +24,7 @@ class notification(Resource):
         r = Notification(**data)
         try:
             r.save_to_db()
-            return r.json(), 201
+            return r.json(), 200
         except:
             return {"message": "error"}, 500
 
@@ -33,7 +33,7 @@ class notification(Resource):
         r = Notification.find_by_Id(id)
         if r:
             r.delete_from_db()
-            return {'message': 'notification: deleted.'}
+            return {'message': 'notification: deleted.'}, 200
         return {'message': ' not found.'}, 404
 
     def put(self, id):
@@ -47,10 +47,10 @@ class notification(Resource):
             r.Time = data['Time']
             r.Unread = data['Unread']
             r.save_to_db()
-            return r.json()
+            return r.json(), 200
         return {'message': 'not found.'}, 404
 
 class Notifications(Resource):
     def get(self):
         data = {'notifications': list(map(lambda x: x.json(), Notification.query.all()))}
-        return data
+        return data, 200
