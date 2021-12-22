@@ -13,7 +13,7 @@ class artifact(Resource):
     def get(self, name):
         atf = Artifact.find_by_name(name)
         if atf:
-            return atf.json()
+            return atf.json(), 200
         return {'message': 'Artifact not found'}, 404
 
     def post(self):
@@ -25,13 +25,13 @@ class artifact(Resource):
             art.save_to_db()
         except:
             return {"message": "An error occurred inserting the artifact."}, 500
-        return {"message": "Artifact added."}, 201
+        return {"message": "Artifact added."}, 200
 
     def delete(self, name):
         art = Artifact.find_by_name(name)
         if art:
             art.delete_from_db()
-            return {'message': 'Artifact deleted.'}
+            return {'message': 'Artifact deleted.'}, 200
         return {'message': 'Artifact not found.'}, 404
 
     def put(self, name):
@@ -44,10 +44,10 @@ class artifact(Resource):
             art.Level = data['Level']
             art.ImageId = data['ImageId']
             art.save_to_db()
-            return art.json()
+            return art.json(), 200
         return {'message': 'Artifact not found.'}, 404
 
 class artifacts(Resource):
     def get(self):
-        return {'artifacts': list(map(lambda x: x.json(), Artifact.query.all()))}
+        return {'artifacts': list(map(lambda x: x.json(), Artifact.query.all()))}, 200
 

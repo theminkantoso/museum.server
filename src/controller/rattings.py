@@ -14,7 +14,7 @@ class ratting(Resource):
     def get(self, id):
         data = Ratting.find_by_AccountId(id)
         if data:
-            return data.json()
+            return data.json(), 200
         return {'message': 'not found'}, 404
 
     # xem lai cho nay, error 
@@ -28,7 +28,7 @@ class ratting(Resource):
         r = Ratting(**data)
         try:
             r.save_to_db()
-            return r.json(), 201
+            return r.json(), 200
         except:
             return {"message": "error."}, 500
 
@@ -37,7 +37,7 @@ class ratting(Resource):
         r = Ratting.find_by_AccountId(id)
         if r:
             r.delete_from_db()
-            return {'message': 'ratting deleted.'}
+            return {'message': 'ratting deleted.'}, 200
         return {'message': 'ratting not found.'}, 404
 
     def put(self, id):
@@ -52,11 +52,11 @@ class ratting(Resource):
             r.Star = data['Star']
             r.Description = data['Description']
             r.save_to_db()
-            return r.json()
+            return r.json(), 200
         return {'message': 'ratting not found.'}, 404
 
 
 class Rattings(Resource):
     def get(self):
         data = {'rattings': list(map(lambda x: x.json(), Ratting.query.all()))}
-        return data
+        return data, 200
