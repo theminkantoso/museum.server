@@ -87,7 +87,7 @@ class Register(Resource):
         if AccountDb.find_by_email(email.lower()) is not None:
             return {'message': "An account with this email already existed."}, 400
         user = AccountDb(email=email.lower(), Password=generate_password_hash(password, method='sha256'),
-                         createdAt=datetime.now())
+                         createdAt=datetime.now(), roleId=1)
         token = su.dumps(email.lower(), salt='email-confirm')
         link = url_for('confirmation', token=token, _external=False)
         try:

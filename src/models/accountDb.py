@@ -33,11 +33,12 @@ class AccountDb(db.Model):
         self.CreateAt = CreateAt
         self.UpdateAt = UpdateAt
 
-    def __init__(self, email, Password, createdAt):
+    def __init__(self, email, Password, createdAt, roleId):
 
         self.email = email
         self.Password = Password
         self.CreateAt = createdAt
+        self.RoleId = roleId
 
     # def json(self):
     #     return {'Name': self.Name, 'Content': self.Content, 'Url': self.Url, 'Path': self.Path,
