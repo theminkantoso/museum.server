@@ -33,7 +33,7 @@ class AccountDb(db.Model):
         self.CreateAt = CreateAt
         self.UpdateAt = UpdateAt
 
-    def __init__(self, email, Password, createdAt):
+    def __init__(self, email, Password, RoleId, createdAt):
 
         self.email = email
         self.Password = Password

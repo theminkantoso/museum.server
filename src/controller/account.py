@@ -53,10 +53,7 @@ class Account(Resource):
         if check_password_hash(user.Password, password):
             if user.isActivated:
                 access_token = create_access_token(identity=email.lower())
-                try:
-                    return jsonify(access_token=access_token.decode('utf-8'), role=user.RoleId)
-                except:
-                    return jsonify(access_token=access_token, role=user.RoleId)
+                return jsonify(access_token=access_token.decode('utf-8'), role="1")
             else:
                 return {"message": "Please confirm your account via your email"}, 401
         return {"message": "Incorrect username or password"}, 401

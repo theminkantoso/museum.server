@@ -9,7 +9,7 @@ class accountFA(Resource):
     def get(self, AccId, id):
         a = AccountFA.find_by_id(AccId,id)
         if a :
-            return a.json(), 200
+            return a.json()
         return {'message': 'AccountFavoriteArtifact not found'}, 404
 
     def post(self):
@@ -22,18 +22,18 @@ class accountFA(Resource):
             art.save_to_db()
         except:
             return {"message": "An error occurred inserting the AccountFavoriteArtifact."}, 500
-        return {"message": "AccountFavoriteArtifact added."}, 200
+        return {"message": "AccountFavoriteArtifact added."}, 201
 
     def delete(self, AccId, id):
         a = AccountFA.find_by_id(AccId, id)
         if a:
             a.delete_from_db()
-            return {'message': 'AccountFavoriteArtifact deleted.'}, 200
+            return {'message': 'AccountFavoriteArtifact deleted.'}
         return {'message': 'AccountFavoriteArtifact not found'}, 404
 
 
 #Hiển thị theo Account
 class accountFAs(Resource):
     def get(self, AccId):
-        return {'AccountFavoriteArtifacts': list(map(lambda x: x.json(), AccountFA.find_by_id1(AccId)))}, 200
+        return {'AccountFavoriteArtifacts': list(map(lambda x: x.json(), AccountFA.find_by_id1(AccId)))}
 
