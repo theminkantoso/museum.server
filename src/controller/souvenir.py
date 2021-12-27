@@ -10,8 +10,8 @@ class souvenir(Resource):
     parser.add_argument('Discount', type=float)
     parser.add_argument('ImageId', type=int)
 
-    def get(self, name):
-        sou = Souvenir.find_by_name(name)
+    def get(self, id):
+        sou = Souvenir.find_by_id(id)
         if sou:
             return sou.json()
         return {'message': 'Souvenir not found'}, 404
@@ -28,16 +28,16 @@ class souvenir(Resource):
             return {"message": "An error occurred inserting the souvenir."}, 500
         return {"Message": "Souvenir added. "}, 201
 
-    def delete(self, name):
-        sou = Souvenir.find_by_name(name)
+    def delete(self, id):
+        sou = Souvenir.find_by_id(id)
         if sou:
             sou.delete_from_db()
             return {'message': 'Souvenir deleted.'}
         return {'message': 'Souvenir not found.'}, 404
 
-    def put(self, name):
+    def put(self, id):
         data = souvenir.parser.parse_args()
-        sou = Souvenir.find_by_name(name)
+        sou = Souvenir.find_by_id(id)
 
         if sou:
             sou.Name = data['Name']
@@ -48,6 +48,7 @@ class souvenir(Resource):
             sou.save_to_db()
             return sou.json()
         return {'message': 'Souvenir not found.'}, 404
+
 
 class souvenirs(Resource):
     def get(self):

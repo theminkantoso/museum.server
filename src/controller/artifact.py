@@ -47,6 +47,7 @@ class artifact(Resource):
             return art.json()
         return {'message': 'Artifact not found.'}, 404
 
+
 class artifacts(Resource):
     def get(self):
         return {'artifacts': list(map(lambda x: x.json(), Artifact.query.all()))}

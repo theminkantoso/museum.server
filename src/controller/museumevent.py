@@ -14,8 +14,8 @@ class Event(Resource):
     parser.add_argument('EventDate')
     parser.add_argument('Poster', type=int)
 
-    def get(self, name):
-        evt = Museumevent.find_by_name(name)
+    def get(self, id):
+        evt = Museumevent.find_by_id(id)
         if evt:
             return evt.json()
         return {'message': 'Event not found'}, 404
@@ -31,17 +31,16 @@ class Event(Resource):
         except:
             return {"message": "An error occurred inserting the event."}, 500
 
-
-    def delete(self, name):
-        evt = Museumevent.find_by_name(name)
+    def delete(self, id):
+        evt = Museumevent.find_by_id(id)
         if evt:
             evt.delete_from_db()
             return {'message': 'Event deleted.'}
         return {'message': 'Event not found.'}, 404
 
-    def put(self, name):
+    def put(self, id):
         data = Event.parser.parse_args()
-        evt = Museumevent.find_by_name(name)
+        evt = Museumevent.find_by_id(id)
 
         if evt:
             evt.Name = data['Name']
@@ -53,6 +52,7 @@ class Event(Resource):
             evt.save_to_db()
             return evt.json()
         return {'message': 'Event not found.'}, 404
+
 
 class Events(Resource):
     def get(self):
