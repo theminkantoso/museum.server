@@ -88,7 +88,7 @@ class Register(Resource):
         token = su.dumps(email.lower(), salt='email-confirm')
         link = url_for('confirmation', token=token, _external=False)
         try:
-            msg = Message('Confirm Email', sender=os.environ['MAIL'], recipients=[email.lower()])
+            msg = Message('Confirm Email', sender='teammuseummobile@gmail.com', recipients=[email.lower()])
             msg.body = 'Your link is http://127.0.0.1:5000{}'.format(link)
             my_mail.send(msg)
             user.save_to_db()
@@ -136,7 +136,7 @@ class Repass(Resource):
             get_user = AccountDb.find_by_email(email)
             new_password = random_string()
             get_user.Password = generate_password_hash(new_password, method='sha256')
-            msg = Message('New Password Recovery', sender=os.environ['MAIL'], recipients=[email.lower()])
+            msg = Message('New Password Recovery', sender='teammuseummobile@gmail.com', recipients=[email.lower()])
             msg.body = 'Your new password is {}'.format(new_password)
             my_mail.send(msg)
             get_user.updatedAt = datetime.now()

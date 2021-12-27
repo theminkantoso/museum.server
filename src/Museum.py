@@ -16,7 +16,7 @@ from controller.rattings import Rattings, ratting
 from controller.notification import notification, Notifications
 from src import controller
 
-app = Flask(__name__)
+app = Flask(_name_, static_url_path='', static_folder='')
 app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://root:''@localhost/museum'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config.from_pyfile('core/config.py')

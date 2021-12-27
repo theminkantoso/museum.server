@@ -4,6 +4,7 @@ from sqlalchemy.orm import relationship
 
 from src.database import db
 
+
 class Notification(db.Model):
     __tablename__ = 'notification'
     NotificationId = db.Column(db.Integer, primary_key=True)
@@ -11,10 +12,9 @@ class Notification(db.Model):
     Title = db.Column(db.String(50))
     Content = db.Column(db.String(200))
     Time = db.Column(db.Date)
-    Unread = db.Column(db.Integer)
+    Unread = db.Column(db.Boolean)
 
-
-    def __init__(self, NotificationId, AccountId, Title,Content, Time, Unread ):
+    def __init__(self, NotificationId, AccountId, Title, Content, Time, Unread):
         self.NotificationId = NotificationId
         self.AccountId = AccountId
         self.Title = Title
@@ -22,15 +22,26 @@ class Notification(db.Model):
         self.Time = Time
         self.Unread = Unread
 
+    def __init__(self, AccountId, Title, Content, Time, Unread):
+        self.AccountId = AccountId
+        self.Title = Title
+        self.Content = Content
+        self.Time = Time
+        self.Unread = Unread
+
     def json(self):
-        if isinstance(self.Time, datetime.date):
-            self.Time = self.Time.strftime("%Y-%m-%d")
-        return {"NotificationId" : self.NotificationId, "AccountId": self.AccountId,
-                "Title":self.Title ,"Content": self.Content, "Time": self.Time, "Unread": self.Unread}
+        if isinstance(self.Time, datetime.datetime):
+            self.Time = self.Time.strftime("%H:%M:%S-%d-%b-%Y")
+        return {"NotificationId": self.NotificationId, "AccountId": self.AccountId,
+                "Title": self.Title, "Content": self.Content, "Time": self.Time, "Unread": self.Unread}
 
     @classmethod
     def find_by_Id(cls, id):
         return cls.query.filter_by(NotificationId=id).first()
+
+    @classmethod
+    def find_by_AccId(cls, AccId):
+        return cls.query.filter_by(AccountId=AccId).first()
 
     @classmethod
     def find_by_title(cls, title):

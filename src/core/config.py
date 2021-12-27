@@ -4,8 +4,8 @@ import os
 MAIL_SERVER = 'smtp.gmail.com'
 MAIL_PORT = 587
 
-MAIL_USERNAME = os.environ['MAIL']
-MAIL_PASSWORD = os.environ['PASS']
+MAIL_USERNAME = 'teammuseummobile@gmail.com'
+MAIL_PASSWORD = 'Museummobile123'
 
 MAIL_USE_TLS = True
 MAIL_USE_SSL = False
