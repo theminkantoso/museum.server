@@ -34,7 +34,7 @@ class notification(Resource):
         parser.add_argument('Title', type=str)
         parser.add_argument('Content', type=str)
         data = parser.parse_args()
-        if validate_regex(str(data["AccountId"]), regex_id):
+        if not validate_regex(str(data["AccountId"]), regex_id):
             return {"message": "invalid AccountId"}, 400
         timeNow = datetime.now()
         r = Notification(AccountId=data["AccountId"], Title=data["Title"],
@@ -94,10 +94,10 @@ class NotificationsAll(Resource):
 
 class Notifications(Resource):  # tất cả thông báo của mỗi người dùng.
     def get(self, AccId):
-        if validate_regex(AccId, regex_id):
+        if not validate_regex(AccId, regex_id):
             return {"message": "invalid AccountId"}, 400
         data = {'notifications': list(map(lambda x: x.json(), Notification.find_All_Notifications_by_AccId(AccId)))}
-        return data
+        return data,200
 
 #  post 1 thông báo => lưu cho tất cả người dùng (Admin) => Không cần gửi id người dùng
 #  người dùng đọc 1  thông báo => gửi unread.
