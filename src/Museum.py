@@ -8,7 +8,7 @@ from controller.museumevent import Event, Events
 from controller.souvenir import souvenir, souvenirs
 from controller.artifacttype import artifactType, artifactTypes
 from src.controller.account import Account, Register, Confirmation, Repass, ChangePass, UserLogoutAccess
-from src.controller.orderTicket import Order, OrderQR
+from src.controller.orderTicket import OrderTicket, OrderQR
 
 from controller.artifacttypemapping import artifactTypeMapping, artifactTypeMappings, artifactsType
 from controller.accountfavoriteartifact import accountFA, accountFAs
@@ -61,7 +61,7 @@ api.add_resource(artifactsType, '/artifactsType/<int:id>')
 api.add_resource(accountFA, '/accountFA/<int:AccId>&<int:id>', '/accountFA')
 api.add_resource(accountFAs, '/accountFAs/<int:AccId>') # phân loại theo account
 
-api.add_resource(Order, '/orderticker/<int:id>')
+api.add_resource(OrderTicket, '/orderticket')
 api.add_resource(OrderQR, '/checkorder')
 
 # flask_jwt_extended == 3.21.0
