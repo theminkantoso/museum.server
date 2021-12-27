@@ -21,7 +21,7 @@ def validate_regex(input_string, regex):
 class notification(Resource):
 
     def get(self, Id, AccId):
-        if not validate_regex(Id, regex_id) or not validate_regex(AccId, regex_id):
+        if not validate_regex(str(Id), regex_id) or not validate_regex(str(AccId), regex_id):
             return {"message": "invalid Id or AccountId"}, 400
         r = Notification.find_by_AccId_NotificationId(Id, AccId)
         if r:
@@ -34,7 +34,7 @@ class notification(Resource):
         parser.add_argument('Title', type=str)
         parser.add_argument('Content', type=str)
         data = parser.parse_args()
-        if validate_regex(data["AccountId"], regex_id):
+        if validate_regex(str(data["AccountId"]), regex_id):
             return {"message": "invalid AccountId"}, 400
         timeNow = datetime.now()
         r = Notification(AccountId=data["AccountId"], Title=data["Title"],
@@ -46,7 +46,7 @@ class notification(Resource):
             return {"message": "error"}, 500
 
     def put(self, Id,  AccId):
-        if not validate_regex(Id, regex_id) or not validate_regex(AccId, regex_id):
+        if not validate_regex(str(Id), regex_id) or not validate_regex(str(AccId), regex_id):
             return {"message": "invalid Id or AccountId"}, 400
         parser = reqparse.RequestParser()
         parser.add_argument('Unread', type=int)  # Khi người dùng đọc thông báo
@@ -62,7 +62,7 @@ class notification(Resource):
         return {'message': 'not found.'}, 404
 
     def delete(self, Id, AccId):
-        if not validate_regex(Id, regex_id) or not validate_regex(AccId, regex_id):
+        if not validate_regex(str(Id), regex_id) or not validate_regex(str(AccId), regex_id):
             return {"message": "invalid Id or AccountId"}, 400
         r = Notification.find_by_AccId_NotificationId(Id, AccId)
         if r:
