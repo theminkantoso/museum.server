@@ -52,6 +52,10 @@ class AccountDb(db.Model):
         return cls.query.filter_by(email=email).first()
 
     @classmethod
+    def all_accounts(cls):
+        return cls.query.all()
+
+    @classmethod
     def check_password(cls, password, email):
         user = cls.query.filter_by(email=email).first()
         return check_password_hash(user.Password, password)

@@ -13,7 +13,7 @@ from src.controller.orderTicket import Order, OrderQR
 from controller.artifacttypemapping import artifactTypeMapping, artifactTypeMappings, artifactsType
 from controller.accountfavoriteartifact import accountFA, accountFAs
 from controller.rattings import Rattings, ratting
-from controller.notification import notification, Notifications
+from controller.notification import notification, Notifications, NotificationsAll
 from src import controller
 
 app = Flask(__name__, static_url_path='', static_folder='')
@@ -49,8 +49,9 @@ api.add_resource(UserLogoutAccess, '/logout')
 api.add_resource(Rattings, '/rattings')
 api.add_resource(ratting, '/ratting/<int:id>', '/ratting')
 
-api.add_resource(Notifications, '/notifications')
+api.add_resource(Notifications, '/notifications/<int:AccId>')
 api.add_resource(notification, '/notification/<int:id>', '/notification')
+api.add_resource(NotificationsAll, '/notificationsAll')
 
 api.add_resource(artifactTypeMapping, '/artifactTypeMapping/<int:id>&<int:typeId>', '/artifactTypeMapping')
 api.add_resource(artifactTypeMappings, '/artifactTypeMappings')

@@ -1,5 +1,4 @@
 import datetime
-
 from sqlalchemy.orm import relationship
 
 from src.database import db
@@ -40,8 +39,12 @@ class Notification(db.Model):
         return cls.query.filter_by(NotificationId=id).first()
 
     @classmethod
-    def find_by_AccId(cls, AccId):
-        return cls.query.filter_by(AccountId=AccId).first()
+    def find_by_AccId_NotificationId(cls, Id, AccId):
+        return cls.query.filter_by(AccountId=AccId, NotificationId=Id).first()
+
+    @classmethod
+    def find_All_Notifications_by_AccId(cls, AccId):
+        return cls.query.filter_by(AccountId=AccId)
 
     @classmethod
     def find_by_title(cls, title):
