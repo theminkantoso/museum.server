@@ -72,6 +72,7 @@ api.add_resource(OrderQR, '/checkorder')
 #
 #     return controller.account.RevokedTokenModel.is_jti_blacklisted(jti)
 
+
 @controller.jwt_manager.token_in_blocklist_loader
 def check_if_token_revoked(jwt_header, jwt_payload):
     jti = jwt_payload["jti"]
