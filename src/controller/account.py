@@ -46,9 +46,9 @@ class Account(Resource):
         regex_mail = r'\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b'
         pattern_mail = re.compile(regex_mail)
         if not pattern_mail.fullmatch(email.lower()) or not password.isalnum():
-            return {'message': "Invalid email or password"}, 401
+            return {'msg': "Invalid email or password"}, 401
         if AccountDb.find_by_email(email.lower()) is None:
-            return {'message': "Incorrect username or password"}, 401
+            return {'msg': "Incorrect username or password"}, 401
         user = AccountDb.find_by_email(email.lower())
         if check_password_hash(user.Password, password):
             if user.isActivated:
@@ -58,14 +58,14 @@ class Account(Resource):
                 except:
                     return jsonify(access_token=access_token, role=user.RoleId)
             else:
-                return {"message": "Please confirm your account via your email"}, 401
-        return {"message": "Incorrect username or password"}, 401
+                return {"msg": "Please confirm your account via your email"}, 401
+        return {"msg": "Incorrect username or password"}, 401
 
     def delete(self):
-        return {'message': 'Not allowed'}, 404
+        return {'msg': 'Not allowed'}, 404
 
     def put(self):
-        return {'message': 'Not allowed'}, 404
+        return {'msg': 'Not allowed'}, 404
 
 
 class Register(Resource):
@@ -83,9 +83,9 @@ class Register(Resource):
         regex_mail = r'\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b'
         pattern_mail = re.compile(regex_mail)
         if not pattern_mail.fullmatch(email.lower()) or not password.isalnum():
-            return {'message': "Invalid email or password"}, 400
+            return {'msg': "Invalid email or password"}, 400
         if AccountDb.find_by_email(email.lower()) is not None:
-            return {'message': "An account with this email already existed."}, 400
+            return {'msg': "An account with this email already existed."}, 400
         user = AccountDb(email=email.lower(), Password=generate_password_hash(password, method='sha256'),
                          createdAt=datetime.now(), roleId=1)
         token = su.dumps(email.lower(), salt='email-confirm')
@@ -97,14 +97,14 @@ class Register(Resource):
             user.save_to_db()
         except Exception as e:
             print(e)
-            return {'message': "Unable to send confirmation mail"}, 400
-        return {'message': "Register success"}, 200
+            return {'msg': "Unable to send confirmation mail"}, 400
+        return {'msg': "Register success"}, 200
 
     def delete(self):
-        return {'message': 'Not allowed'}, 404
+        return {'msg': 'Not allowed'}, 404
 
     def put(self):
-        return {'message': 'Not allowed'}, 404
+        return {'msg': 'Not allowed'}, 404
 
 
 class Confirmation(Resource):
@@ -117,9 +117,9 @@ class Confirmation(Resource):
             get_user.updatedAt = datetime.now()
             get_user.commit_to_db()
         except SignatureExpired:
-            return {'message': "The token is expired!"}, 400
+            return {'msg': "The token is expired!"}, 400
         # update email to true
-        return {'message': "Activated succeed"}, 200
+        return {'msg': "Activated succeed"}, 200
 
 
 class Repass(Resource):
@@ -132,9 +132,9 @@ class Repass(Resource):
         regex_mail = r'\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b'
         pattern_mail = re.compile(regex_mail)
         if not pattern_mail.fullmatch(email.lower()):
-            return {'message': "Invalid email"}, 400
+            return {'msg': "Invalid email"}, 400
         if AccountDb.find_by_email(email.lower()) is None:
-            return {'message': "No account with this email"}, 400
+            return {'msg': "No account with this email"}, 400
         try:
             get_user = AccountDb.find_by_email(email)
             new_password = random_string()
@@ -145,8 +145,8 @@ class Repass(Resource):
             get_user.updatedAt = datetime.now()
             get_user.commit_to_db()
         except:
-            return {'message': "Unable to send confirmation mail"}, 400
-        return {'message': "New password sent to your mailbox!"}, 200
+            return {'msg': "Unable to send confirmation mail"}, 400
+        return {'msg': "New password sent to your mailbox!"}, 200
 
 
 class ChangePass(Resource):
@@ -162,15 +162,15 @@ class ChangePass(Resource):
         new_password = data['newpassword']
         re_new_password = data['renewpassword']
         if new_password != re_new_password:
-            return {'message': "Not matching new password"}, 400
+            return {'msg': "Not matching new password"}, 400
         email = get_jwt_identity()
         get_user = AccountDb.find_by_email(email)
         if check_password_hash(get_user.Password, password):
             get_user.Password = generate_password_hash(new_password, method='sha256')
             get_user.updatedAt = datetime.now()
             get_user.commit_to_db()
-            return {'message': "New password saved succeed!"}, 200
-        return {'message': "Wrong password"}, 400
+            return {'msg': "New password saved succeed!"}, 200
+        return {'msg': "Wrong password"}, 400
 
 
 class UserLogoutAccess(Resource):
@@ -194,11 +194,11 @@ class UserLogoutAccess(Resource):
 
             revoked_token.add()
 
-            return {'message': 'Access token has been revoked'}, 200
+            return {'msg': 'Access token has been revoked'}, 200
 
         except:
 
-            return {'message': 'Something went wrong'}, 500
+            return {'msg': 'Something went wrong'}, 500
 
 
 
