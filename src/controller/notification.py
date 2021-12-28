@@ -20,10 +20,10 @@ def validate_regex(input_string, regex):
 
 class notification(Resource):
 
-    def get(self, Id, AccId):
-        if not validate_regex(str(Id), regex_id) or not validate_regex(str(AccId), regex_id):
-            return {"message": "invalid Id or AccountId"}, 400
-        r = Notification.find_by_AccId_NotificationId(Id, AccId)
+    def get(self, Id):
+        if not validate_regex(str(Id), regex_id) :
+            return {"message": "invalid Id "}, 400
+        r = Notification.find_by_Id(Id)
         if r:
             r.json(), 200
         return {'message': ' not found.'}, 404
@@ -34,6 +34,7 @@ class notification(Resource):
         parser.add_argument('Title', type=str)
         parser.add_argument('Content', type=str)
         data = parser.parse_args()
+        print(data)
         if not validate_regex(str(data["AccountId"]), regex_id):
             return {"message": "invalid AccountId"}, 400
         timeNow = datetime.now()
@@ -45,26 +46,26 @@ class notification(Resource):
         except:
             return {"message": "error"}, 500
 
-    def put(self, Id,  AccId):
-        if not validate_regex(str(Id), regex_id) or not validate_regex(str(AccId), regex_id):
-            return {"message": "invalid Id or AccountId"}, 400
+    def put(self, Id):
+        if not validate_regex(str(Id), regex_id) :
+            return {"message": "invalid Id"}, 400
         parser = reqparse.RequestParser()
         parser.add_argument('Unread', type=int)  # Khi người dùng đọc thông báo
         data = parser.parse_args()
         if not data['Unread']:
             return {"message": "can't update"}, 400
 
-        r = Notification.find_by_AccId_NotificationId(Id, AccId)
+        r = Notification.find_by_Id(Id)
         if r:
             r.Unread = data['Unread']
             r.save_to_db()
             return r.json(), 200
         return {'message': 'not found.'}, 404
 
-    def delete(self, Id, AccId):
-        if not validate_regex(str(Id), regex_id) or not validate_regex(str(AccId), regex_id):
-            return {"message": "invalid Id or AccountId"}, 400
-        r = Notification.find_by_AccId_NotificationId(Id, AccId)
+    def delete(self, Id):
+        if not validate_regex(str(Id), regex_id):
+            return {"message": "invalid Id"}, 400
+        r = Notification.find_by_Id(Id)
         if r:
             r.delete_from_db()
             return {'message': 'notification deleted.'}, 200
