@@ -12,7 +12,7 @@ from src.controller.orderTicket import Order, OrderQR
 
 from controller.artifacttypemapping import artifactTypeMapping, artifactTypeMappings, artifactsType
 from controller.accountfavoriteartifact import accountFA, accountFAs
-from controller.rattings import Rattings, ratting
+from controller.ratings import Ratings, rating
 from controller.notification import notification, Notifications, NotificationsAll
 from src import controller
 
@@ -46,8 +46,8 @@ api.add_resource(Repass, '/repass')
 api.add_resource(ChangePass, '/changepass')
 api.add_resource(UserLogoutAccess, '/logout')
 
-api.add_resource(Rattings, '/rattings')
-api.add_resource(ratting, '/ratting/<int:id>', '/ratting')
+api.add_resource(Ratings, '/ratings')
+api.add_resource(rating, '/rating')
 
 api.add_resource(Notifications, '/notifications/<int:AccId>')
 api.add_resource(notification, '/notification/<int:id>', '/notification/<int:Id>&<int:AccId>', '/notification')

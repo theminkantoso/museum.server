@@ -21,11 +21,11 @@ def validate_regex(input_string, regex):
 class notification(Resource):
 
     def get(self, Id):
-        if not validate_regex(str(Id), regex_id) :
+        if not validate_regex(str(Id), regex_id):
             return {"message": "invalid Id "}, 400
         r = Notification.find_by_Id(Id)
         if r:
-            r.json(), 200
+            return r.json(), 200
         return {'message': ' not found.'}, 404
 
     def post(self):
@@ -42,12 +42,12 @@ class notification(Resource):
                          Content=data["Content"], Time=timeNow, Unread=0)
         try:
             r.save_to_db()
-            return r.json(), 200
+            return {"message": "Notification added."}, 200
         except:
-            return {"message": "error"}, 500
+            return {"message": "An error occurred inserting the notification."}, 500
 
     def put(self, Id):
-        if not validate_regex(str(Id), regex_id) :
+        if not validate_regex(str(Id), regex_id):
             return {"message": "invalid Id"}, 400
         parser = reqparse.RequestParser()
         parser.add_argument('Unread', type=int)  # Khi người dùng đọc thông báo
@@ -57,9 +57,12 @@ class notification(Resource):
 
         r = Notification.find_by_Id(Id)
         if r:
-            r.Unread = data['Unread']
-            r.save_to_db()
-            return r.json(), 200
+            try:
+                r.Unread = data['Unread']
+                r.save_to_db()
+                return {"message": "Notification updated."}, 200
+            except:
+                return {"message": "An error occurred updating the notification."}, 500
         return {'message': 'not found.'}, 404
 
     def delete(self, Id):
@@ -67,9 +70,12 @@ class notification(Resource):
             return {"message": "invalid Id"}, 400
         r = Notification.find_by_Id(Id)
         if r:
-            r.delete_from_db()
-            return {'message': 'notification deleted.'}, 200
-        return {'message': ' not found.'}, 404
+            try:
+                r.delete_from_db()
+                return {'message': 'notification deleted.'}, 200
+            except:
+                return {"message": "An error occurred deleting the notification."}, 500
+        return {'message': 'Notification not found.'}, 404
 
 
 # Thông báo Admin cho tất cả người dùng
@@ -87,10 +93,9 @@ class NotificationsAll(Resource):
                              Content=data["Content"], Time=timeNow, Unread=0)
             try:
                 r.save_to_db()
-            except Exception as e:
-                print(e)
-                return {"message": "error"}, 500
-        return {"message": "added"}, 200
+            except:
+                return {"message": "An error occurred inserting the notification."}, 500
+        return {"message": "Notification added"}, 200
 
 
 class Notifications(Resource):  # tất cả thông báo của mỗi người dùng.
@@ -98,7 +103,7 @@ class Notifications(Resource):  # tất cả thông báo của mỗi người d�
         if not validate_regex(AccId, regex_id):
             return {"message": "invalid AccountId"}, 400
         data = {'notifications': list(map(lambda x: x.json(), Notification.find_All_Notifications_by_AccId(AccId)))}
-        return data,200
+        return data, 200
 
 #  post 1 thông báo => lưu cho tất cả người dùng (Admin) => Không cần gửi id người dùng
 #  người dùng đọc 1  thông báo => gửi unread.
