@@ -2,10 +2,10 @@
 -- version 5.1.1
 -- https://www.phpmyadmin.net/
 --
--- Host: 127.0.0.1:3306
--- Generation Time: Dec 05, 2021 at 05:36 PM
--- Server version: 10.4.21-MariaDB-log
--- PHP Version: 8.0.10
+-- Host: 127.0.0.1
+-- Generation Time: Dec 27, 2021 at 03:44 PM
+-- Server version: 10.4.22-MariaDB
+-- PHP Version: 8.1.1
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -59,24 +59,6 @@ CREATE TABLE `accountfavoriteartifact` (
 CREATE TABLE `accountfavoriteevent` (
   `AccountId` int(4) NOT NULL,
   `EventId` int(4) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
--- --------------------------------------------------------
-
---
--- Table structure for table `accounttest`
---
-
-CREATE TABLE `accounttest` (
-  `AccountId` int(4) NOT NULL,
-  `email` varchar(50) NOT NULL,
-  `Password` varchar(10000) NOT NULL,
-  `RoleId` int(4) DEFAULT NULL,
-  `isActivated` tinyint(4) NOT NULL,
-  `confirmedAt` datetime DEFAULT NULL,
-  `GoogleId` varchar(50) DEFAULT NULL,
-  `CreateAt` datetime DEFAULT NULL,
-  `UpdateAt` datetime DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
@@ -136,7 +118,6 @@ CREATE TABLE `artifacttypemapping` (
 CREATE TABLE `entryticket` (
   `TicketId` int(4) NOT NULL,
   `OrderId` int(4) NOT NULL,
-  `TimeFrameId` int(4) NOT NULL,
   `NumberPerson` int(2) NOT NULL,
   `TicketType` int(4) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
@@ -255,17 +236,6 @@ CREATE TABLE `souvenir` (
   `ImageId` int(4) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
--- --------------------------------------------------------
-
---
--- Table structure for table `timeframe`
---
-
-CREATE TABLE `timeframe` (
-  `    TimeFrameId` int(4) NOT NULL,
-  `    Description` varchar(500) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
 --
 -- Indexes for dumped tables
 --
@@ -291,12 +261,6 @@ ALTER TABLE `accountfavoriteevent`
   ADD PRIMARY KEY (`AccountId`,`EventId`),
   ADD KEY `fk_AccountFavoriteEvent_Account` (`AccountId`),
   ADD KEY `fk_AccountFavoriteEvent_MuseumEvent` (`EventId`);
-
---
--- Indexes for table `accounttest`
---
-ALTER TABLE `accounttest`
-  ADD PRIMARY KEY (`AccountId`);
 
 --
 -- Indexes for table `agegroup`
@@ -330,7 +294,6 @@ ALTER TABLE `artifacttypemapping`
 --
 ALTER TABLE `entryticket`
   ADD PRIMARY KEY (`TicketId`),
-  ADD KEY `fk_entryticket_TimeFrame` (`TimeFrameId`),
   ADD KEY `fk_entryticket_AgeGroup` (`TicketType`),
   ADD KEY `fk_entryticket_Orders` (`OrderId`);
 
@@ -390,12 +353,6 @@ ALTER TABLE `souvenir`
   ADD KEY `fk_sou` (`ImageId`);
 
 --
--- Indexes for table `timeframe`
---
-ALTER TABLE `timeframe`
-  ADD PRIMARY KEY (`    TimeFrameId`);
-
---
 -- AUTO_INCREMENT for dumped tables
 --
 
@@ -403,12 +360,6 @@ ALTER TABLE `timeframe`
 -- AUTO_INCREMENT for table `account`
 --
 ALTER TABLE `account`
-  MODIFY `AccountId` int(4) NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT for table `accounttest`
---
-ALTER TABLE `accounttest`
   MODIFY `AccountId` int(4) NOT NULL AUTO_INCREMENT;
 
 --
@@ -478,12 +429,6 @@ ALTER TABLE `souvenir`
   MODIFY `SouvenirId` int(4) NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT for table `timeframe`
---
-ALTER TABLE `timeframe`
-  MODIFY `    TimeFrameId` int(4) NOT NULL AUTO_INCREMENT;
-
---
 -- Constraints for dumped tables
 --
 
@@ -519,8 +464,7 @@ ALTER TABLE `artifacttypemapping`
 --
 ALTER TABLE `entryticket`
   ADD CONSTRAINT `fk_entryticket_AgeGroup` FOREIGN KEY (`TicketType`) REFERENCES `agegroup` (`    GroupId`),
-  ADD CONSTRAINT `fk_entryticket_Orders` FOREIGN KEY (`OrderId`) REFERENCES `orders` (`OrderId`),
-  ADD CONSTRAINT `fk_entryticket_TimeFrame` FOREIGN KEY (`TimeFrameId`) REFERENCES `timeframe` (`    TimeFrameId`);
+  ADD CONSTRAINT `fk_entryticket_Orders` FOREIGN KEY (`OrderId`) REFERENCES `orders` (`OrderId`);
 
 --
 -- Constraints for table `museumevent`
