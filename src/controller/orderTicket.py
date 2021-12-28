@@ -78,10 +78,10 @@ class OrderTicket(Resource):
             buffer = BytesIO()
             img.get_image().save(buffer, 'JPEG', quality=70)
             buffer.seek(0)
-            img.save('./statics/images/test'+str(order_id.OrderId)+'.jpeg')
+            img.save('./statics/images/qr_code_ticket/qr'+str(order_id.OrderId)+'.jpeg')
             # return send_file(buffer, mimetype='image/jpeg', as_attachment=True, download_name=random_string()+'.jpeg')
-            return send_file('./statics/images/test' + str(order_id.OrderId) +'.jpeg', mimetype='image/jpeg',
-                             as_attachment=True, download_name=random_string()+'.jpeg')
+            return send_file('./statics/images/qr_code_ticket/qr' + str(order_id.OrderId) +'.jpeg',
+                             mimetype='image/jpeg', as_attachment=True, download_name=random_string()+'.jpeg')
         except Exception as e:
             print(e)
             return {"msg": "Error saving your ticket"}, 400
@@ -134,7 +134,7 @@ class OrdersId(Resource):
     @jwt_required()
     def get(self, id):
         try:
-            return send_file('./statics/images/test' + str(id) + '.jpeg', mimetype='image/jpeg', as_attachment=True,
+            return send_file('./statics/images/qr_code_ticket/qr' + str(id) + '.jpeg', mimetype='image/jpeg', as_attachment=True,
                              download_name=random_string() + '.jpeg')
         except Exception as e:
             print(e)
