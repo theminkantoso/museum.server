@@ -65,7 +65,7 @@ class OrderTicket(Resource):
             # img.save('test.jpeg')
             img.get_image().save(buffer, 'JPEG', quality=70)
             buffer.seek(0)
-            return send_file(buffer, mimetype='jpeg')
+            return send_file(buffer, mimetype='image/jpeg', as_attachment=True, download_name='as.jpeg')
             # return response, 200
         except Exception as e:
             print(e)
