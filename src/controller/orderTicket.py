@@ -1,11 +1,13 @@
-from datetime import datetime, date
+from datetime import date
 from flask_restful import Resource, reqparse
 from io import BytesIO
 from flask import send_file
+from flask_jwt_extended import jwt_required, get_jwt_identity, get_jwt
 
 from src.models.ticketDb import TicketDb
 from src.models.orderDb import OrderDb
 from src.models.ageGroupDb import AgeGroupDb
+from src.models.accountDb import AccountDb
 
 import random
 import string
@@ -24,15 +26,19 @@ def random_string():
 
 class OrderTicket(Resource):
     parser = reqparse.RequestParser()
-    parser.add_argument('OrderDate')
+    parser.add_argument('order_date')
     parser.add_argument('children', type=int)
     parser.add_argument('adult', type=int)
     parser.add_argument('elderly', type=int)
+    parser.add_argument('total', type=int)
 
     def get(self):
         return {'artifacts': list(map(lambda x: x.json(), AgeGroupDb.query.all()))}, 200
 
+    @jwt_required()
     def post(self):
+        email = get_jwt_identity()
+        account = AccountDb.find_by_email(email)
         data = OrderTicket.parser.parse_args()
         order_date = data['order_date']
         children = data['children']
@@ -48,7 +54,8 @@ class OrderTicket(Resource):
                 qrcode_str = random_string()
                 order_check_dup = OrderDb.find_by_qr(qrcode_str)
 
-            order = OrderDb(OrderDate=order_date, TotalPrice=total, CreatedAt=datetime.now(), QRCode=qrcode_str)
+            order = OrderDb(OrderDate=order_date, TotalPrice=total, CreatedAt=date.today(), AccountId=account.AccountId,
+                            QRCode=qrcode_str)
             order.save_to_db()
             order_id = OrderDb.find_by_qr(qrcode_str)
             children_ticket = TicketDb(OrderId=order_id.OrderId, NumberPerson=children, TicketType=1)
@@ -71,7 +78,10 @@ class OrderTicket(Resource):
             buffer = BytesIO()
             img.get_image().save(buffer, 'JPEG', quality=70)
             buffer.seek(0)
-            return send_file(buffer, mimetype='image/jpeg', as_attachment=True, download_name=random_string()+'.jpeg')
+            img.save('./statics/images/test'+str(order_id.OrderId)+'.jpeg')
+            # return send_file(buffer, mimetype='image/jpeg', as_attachment=True, download_name=random_string()+'.jpeg')
+            return send_file('./statics/images/test' + str(order_id.OrderId) +'.jpeg', mimetype='image/jpeg',
+                             as_attachment=True, download_name=random_string()+'.jpeg')
         except Exception as e:
             print(e)
             return {"msg": "Error saving your ticket"}, 400
@@ -107,3 +117,29 @@ class OrderQR(Resource):
                 else:
                     return {'msg': 'Ban da dung ve nay roi!'}, 200
         return {'message': 'no order matching'}, 404
+
+
+class Orders(Resource):
+
+    @jwt_required()
+    def get(self):
+        email = get_jwt_identity()
+        account = AccountDb.find_by_email(email)
+        orders = OrderDb.find_by_account(account.AccountId)
+        return {'orders': list(map(lambda x: x.json(), orders))}, 200
+
+
+class OrdersId(Resource):
+
+    @jwt_required()
+    def get(self, id):
+        try:
+            return send_file('./statics/images/test' + str(id) + '.jpeg', mimetype='image/jpeg', as_attachment=True,
+                             download_name=random_string() + '.jpeg')
+        except Exception as e:
+            print(e)
+            return {"msg": "error"}, 404
+
+
+
+

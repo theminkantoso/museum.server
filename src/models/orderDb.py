@@ -7,22 +7,24 @@ class OrderDb(db.Model):
     OrderDate = db.Column(db.Date)
     TotalPrice = db.Column(db.Integer)
     CreatedAt = db.Column(db.Date)
+    AccountId = db.Column(db.Integer)
     QRCode = db.Column(db.String)
     used = db.Column(db.Boolean)
 
-    def __init__(self, OrderId, OrderDate, TotalPrice, CreatedAt, QRCode, used):
-        self.OrderId = OrderId
-        self.OrderDate = OrderDate
-        self.TotalPrice = TotalPrice
-        self.CreatedAt = CreatedAt
-        self.QRCode = QRCode
-        self.used = used
+    # def __init__(self, OrderId, OrderDate, TotalPrice, CreatedAt, QRCode, used):
+    #     self.OrderId = OrderId
+    #     self.OrderDate = OrderDate
+    #     self.TotalPrice = TotalPrice
+    #     self.CreatedAt = CreatedAt
+    #     self.QRCode = QRCode
+    #     self.used = used
 
-    def __init__(self, OrderDate, TotalPrice, CreatedAt, QRCode):
+    def __init__(self, OrderDate, TotalPrice, CreatedAt, AccountId, QRCode):
         self.OrderDate = OrderDate
         self.TotalPrice = TotalPrice
         self.CreatedAt = CreatedAt
         self.QRCode = QRCode
+        self.AccountId = AccountId
         self.used = False
 
     def save_to_db(self):
@@ -35,6 +37,10 @@ class OrderDb(db.Model):
     @classmethod
     def find_by_qr(cls, qr):
         return cls.query.filter_by(QRCode=qr).first()
+
+    @classmethod
+    def find_by_account(cls, id):
+        return cls.query.filter_by(AccountId=id).first()
 
     def json(self):
         return {'OrderId': self.OrderId, 'OrderDate': self.OrderDate, 'TotalPrice': self.TotalPrice,
