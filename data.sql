@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Dec 27, 2021 at 03:44 PM
+-- Generation Time: Dec 28, 2021 at 05:45 PM
 -- Server version: 10.4.22-MariaDB
 -- PHP Version: 8.1.1
 
@@ -26,9 +26,9 @@ SET time_zone = "+00:00";
 --
 
 INSERT INTO `agegroup` (`    GroupId`, `    Description`, `    Price`) VALUES
-(1, 'children', '50000.00'),
-(2, 'adult', '80000.00'),
-(3, 'elderly', '65000.00');
+(1, 'children', 50000),
+(2, 'adult', 80000),
+(3, 'elderly', 65000);
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

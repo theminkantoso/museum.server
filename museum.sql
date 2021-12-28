@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Dec 27, 2021 at 03:44 PM
+-- Generation Time: Dec 28, 2021 at 05:45 PM
 -- Server version: 10.4.22-MariaDB
 -- PHP Version: 8.1.1
 
@@ -70,7 +70,7 @@ CREATE TABLE `accountfavoriteevent` (
 CREATE TABLE `agegroup` (
   `    GroupId` int(4) NOT NULL,
   `    Description` varchar(500) NOT NULL,
-  `    Price` decimal(10,2) NOT NULL
+  `    Price` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
