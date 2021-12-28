@@ -1,5 +1,7 @@
 from datetime import datetime, date
 from flask_restful import Resource, reqparse
+from io import BytesIO
+from flask import send_file
 
 from src.models.ticketDb import TicketDb
 from src.models.orderDb import OrderDb
@@ -7,6 +9,7 @@ from src.models.ageGroupDb import AgeGroupDb
 
 import random
 import string
+import qrcode
 
 
 def random_string():
@@ -37,7 +40,7 @@ class OrderTicket(Resource):
         elderly = data['elderly']
         total = data['total']
         try:
-            qrcode = random_string()
+            qrcode_str = random_string()
             order = OrderDb(OrderDate=order_date, TotalPrice=total, CreatedAt=datetime.now(), QRCode=qrcode)
             order.save_to_db()
             order_id = OrderDb.find_by_qr(qrcode)
@@ -47,8 +50,25 @@ class OrderTicket(Resource):
             children_ticket.save_to_db()
             adult_ticket.save_to_db()
             elderly_ticket.save_to_db()
-            return {"qrcode": qrcode}, 200
-        except:
+
+            qr = qrcode.QRCode(
+                version=1,
+                error_correction=qrcode.constants.ERROR_CORRECT_L,
+                box_size=10,
+                border=4,
+            )
+            qr.add_data(qrcode_str)
+            qr.make(fit=True)
+            img = qr.make_image(fill_color="black", back_color="white")
+
+            buffer = BytesIO()
+            # img.save('test.jpeg')
+            img.get_image().save(buffer, 'JPEG', quality=70)
+            buffer.seek(0)
+            return send_file(buffer, mimetype='jpeg')
+            # return response, 200
+        except Exception as e:
+            print(e)
             return {"msg": "Error saving your ticket"}, 400
 
     def delete(self):
