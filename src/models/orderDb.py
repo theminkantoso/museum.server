@@ -1,7 +1,7 @@
 from src.database import db
 
 
-class Order(db.Model):
+class OrderDb(db.Model):
     __tablename__ = 'orders'
     OrderId = db.Column(db.Integer, primary_key=True, autoincrement=True)
     OrderDate = db.Column(db.Date)
@@ -18,13 +18,12 @@ class Order(db.Model):
         self.QRCode = QRCode
         self.used = used
 
-    def __init__(self, OrderId, OrderDate, TotalPrice, CreatedAt, QRCode, used):
-        self.OrderId = OrderId
+    def __init__(self, OrderDate, TotalPrice, CreatedAt, QRCode):
         self.OrderDate = OrderDate
         self.TotalPrice = TotalPrice
         self.CreatedAt = CreatedAt
         self.QRCode = QRCode
-        self.used = used
+        self.used = False
 
     def save_to_db(self):
         db.session.add(self)

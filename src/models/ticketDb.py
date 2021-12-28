@@ -1,18 +1,15 @@
 from src.database import db
 
 
-class Ticket(db.Model):
+class TicketDb(db.Model):
     __tablename__ = 'entryticket'
     TicketId = db.Column(db.Integer, primary_key=True, autoincrement=True)
     OrderId = db.Column(db.Integer, db.ForeignKey('orders.OrderId'))
-    # TimeFrameId = db.Column(db.Integer, db.ForeignKey('timeframe.TimeFrameId'))
     NumberPerson = db.Column(db.Integer)
     TicketType = db.Column(db.Integer, db.ForeignKey('agegroup.GroupId'))
 
-    def __init__(self, TicketId, OrderId, NumberPerson, TicketType):
-        self.TicketId = TicketId
+    def __init__(self, OrderId, NumberPerson, TicketType):
         self.OrderId = OrderId
-        # self.TimeFrameId = TimeFrameId
         self.NumberPerson = NumberPerson
         self.TicketType = TicketType
 
