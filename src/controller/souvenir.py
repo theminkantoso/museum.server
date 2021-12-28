@@ -1,5 +1,18 @@
+import re
+
 from flask_restful import Resource, reqparse
 from src.models.souvenirDb import Souvenir
+
+
+regex_id = '^[0-9]*$'
+
+
+def validate_regex(input_string, regex):
+    pattern = re.compile(regex)
+    if pattern.fullmatch(input_string):
+        return True
+    return False
+
 
 class souvenir(Resource):
     parser = reqparse.RequestParser()
@@ -10,8 +23,10 @@ class souvenir(Resource):
     parser.add_argument('Discount', type=float)
     parser.add_argument('ImageId', type=int)
 
-    def get(self, name):
-        sou = Souvenir.find_by_name(name)
+    def get(self, id):
+        if not validate_regex(id, regex_id):
+            return {"message": "invalid Id "}, 400
+        sou = Souvenir.find_by_id(id)
         if sou:
             return sou.json(), 200
         return {'message': 'Souvenir not found'}, 404
@@ -26,28 +41,39 @@ class souvenir(Resource):
             sou.save_to_db()
         except:
             return {"message": "An error occurred inserting the souvenir."}, 500
-        return {"Message": "Souvenir added. "}, 200
+        return {"Message": "Souvenir added."}, 200
 
-    def delete(self, name):
-        sou = Souvenir.find_by_name(name)
+    def delete(self, id):
+        if not validate_regex(id, regex_id):
+            return {"message": "invalid Id "}, 400
+        sou = Souvenir.find_by_id(id)
         if sou:
-            sou.delete_from_db()
-            return {'message': 'Souvenir deleted.'}, 200
+            try:
+                sou.delete_from_db()
+                return {'message': 'Souvenir deleted.'}, 200
+            except:
+                return {"message": "An error occurred deleting the souvenir."}, 500
         return {'message': 'Souvenir not found.'}, 404
 
-    def put(self, name):
+    def put(self, id):
+        if not validate_regex(id, regex_id):
+            return {"message": "invalid Id "}, 400
         data = souvenir.parser.parse_args()
-        sou = Souvenir.find_by_name(name)
+        sou = Souvenir.find_by_id(id)
 
         if sou:
-            sou.Name = data['Name']
-            sou.Description = data['Description']
-            sou.Price = data['Price']
-            sou.Discount = data['Discount']
-            sou.ImageId = data['ImageId']
-            sou.save_to_db()
-            return sou.json(), 200
+            try:
+                sou.Name = data['Name']
+                sou.Description = data['Description']
+                sou.Price = data['Price']
+                sou.Discount = data['Discount']
+                sou.ImageId = data['ImageId']
+                sou.save_to_db()
+                return {'message': 'Souvenir updated.'}, 200
+            except:
+                return {"message": "An error occurred updating the souvenir."}, 500
         return {'message': 'Souvenir not found.'}, 404
+
 
 class souvenirs(Resource):
     def get(self):
