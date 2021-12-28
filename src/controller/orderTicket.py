@@ -41,9 +41,16 @@ class OrderTicket(Resource):
         total = data['total']
         try:
             qrcode_str = random_string()
-            order = OrderDb(OrderDate=order_date, TotalPrice=total, CreatedAt=datetime.now(), QRCode=qrcode)
+
+            # prevent duplicate
+            order_check_dup = OrderDb.find_by_qr(qrcode_str)
+            while order_check_dup is not None:
+                qrcode_str = random_string()
+                order_check_dup = OrderDb.find_by_qr(qrcode_str)
+
+            order = OrderDb(OrderDate=order_date, TotalPrice=total, CreatedAt=datetime.now(), QRCode=qrcode_str)
             order.save_to_db()
-            order_id = OrderDb.find_by_qr(qrcode)
+            order_id = OrderDb.find_by_qr(qrcode_str)
             children_ticket = TicketDb(OrderId=order_id.OrderId, NumberPerson=children, TicketType=1)
             adult_ticket = TicketDb(OrderId=order_id.OrderId, NumberPerson=adult, TicketType=2)
             elderly_ticket = TicketDb(OrderId=order_id.OrderId, NumberPerson=elderly, TicketType=3)
@@ -62,11 +69,9 @@ class OrderTicket(Resource):
             img = qr.make_image(fill_color="black", back_color="white")
 
             buffer = BytesIO()
-            # img.save('test.jpeg')
             img.get_image().save(buffer, 'JPEG', quality=70)
             buffer.seek(0)
-            return send_file(buffer, mimetype='image/jpeg', as_attachment=True, download_name='as.jpeg')
-            # return response, 200
+            return send_file(buffer, mimetype='image/jpeg', as_attachment=True, download_name=random_string()+'.jpeg')
         except Exception as e:
             print(e)
             return {"msg": "Error saving your ticket"}, 400
