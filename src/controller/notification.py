@@ -109,8 +109,6 @@ class Notifications(Resource):  # tất cả thông báo của mỗi người d�
     def get(self):
         email_acc = get_jwt_identity()
         id_acc = AccountDb.find_by_email(email_acc).AccountId
-        if not validate_regex(str(id_acc), regex_id):
-            return {"message": "invalid AccountId"}, 400
         data = {'notifications': list(map(lambda x: x.json(), Notification.find_All_Notifications_by_AccId(id_acc)))}
         return data, 200
 
