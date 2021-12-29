@@ -10,15 +10,16 @@ from flask import url_for, jsonify
 # from flask_jwt_extended import create_access_token, jwt_required, current_user, get_jwt_identity, get_raw_jwt
 from flask_jwt_extended import create_access_token, jwt_required, get_jwt_identity, get_jwt
 from flask_mail import Message
+from src.models.orderDb import OrderDb
 
-import json
+# import json
 import re
 import random
 import string
-import jwt
-import smtplib
-from email.message import EmailMessage
-su = URLSafeTimedSerializer('Thisisasecret!') # reformat later
+# import jwt
+# import smtplib
+# from email.message import EmailMessage
+su = URLSafeTimedSerializer('Thisisasecret!')  # reformat later
 
 
 def random_string():
@@ -37,7 +38,8 @@ class Account(Resource):
     parser.add_argument('password', type=str)
 
     def get(self):
-        pass
+        print(OrderDb.qr_detail_ticket('74o55u395EaXq7R8d1KW')[0][1])
+        # pass
 
     def post(self):
         data = Account.parser.parse_args()

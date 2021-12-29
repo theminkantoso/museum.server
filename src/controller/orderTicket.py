@@ -8,6 +8,7 @@ from src.models.ticketDb import TicketDb
 from src.models.orderDb import OrderDb
 from src.models.ageGroupDb import AgeGroupDb
 from src.models.accountDb import AccountDb
+from src.services.orderServices import OrderService
 
 import random
 import string
@@ -98,22 +99,23 @@ class OrderQR(Resource):
     parser.add_argument('qrcode')
 
     def get(self):
-        data = OrderDb.parser.parse_args()
+        data = OrderQR.parser.parse_args()
         qrcode = data['qrcode']
         qr_check = OrderDb.find_by_qr(qr=qrcode)
         today = date.today()
         if qr_check is not None:
             if today < qr_check.OrderDate:
-                return {'msg': 'Not today yet'}, 200
+                return {'msg': 'Not today yet', 'order_date': qr_check.OrderDate.isoformat()}, 200
             elif today > qr_check.OrderDate:
                 qr_check.used = True
                 qr_check.commit_to_db()
-                return {'msg': 'Da qua ngay dat ve'}, 200
+                return {'msg': 'Da qua ngay dat ve', 'order_date': qr_check.OrderDate.isoformat()}, 200
             else:
                 if not qr_check.used:
                     qr_check.used = True
                     qr_check.commit_to_db()
-                    return {'msg': 'success', 'order_detail': qr_check.json()}, 200
+                    order_detail = OrderDb.qr_detail_ticket(qrcode)
+                    return {'msg': 'success', 'order_detail': OrderService.convert_to_dict(order_detail)}, 200
                 else:
                     return {'msg': 'Ban da dung ve nay roi!'}, 200
         return {'message': 'no order matching'}, 404

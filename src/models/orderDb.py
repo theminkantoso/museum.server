@@ -1,4 +1,6 @@
 from src.database import db
+from src.models.ticketDb import TicketDb
+from src.models.ageGroupDb import AgeGroupDb
 
 
 class OrderDb(db.Model):
@@ -37,6 +39,12 @@ class OrderDb(db.Model):
     @classmethod
     def find_by_qr(cls, qr):
         return cls.query.filter_by(QRCode=qr).first()
+
+    @staticmethod
+    def qr_detail_ticket(qr):
+        return db.session.query(OrderDb.OrderDate, TicketDb.NumberPerson, AgeGroupDb.Description).select_from(OrderDb).\
+            join(TicketDb, OrderDb.OrderId == TicketDb.OrderId).\
+            join(AgeGroupDb, TicketDb.TicketType == AgeGroupDb.GroupId).filter(OrderDb.QRCode == qr).all()
 
     @classmethod
     def find_by_account(cls, id):
