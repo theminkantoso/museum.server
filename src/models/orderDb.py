@@ -1,6 +1,7 @@
 from src.database import db
 from src.models.ticketDb import TicketDb
 from src.models.ageGroupDb import AgeGroupDb
+from src.models.souvenirDb import SouvenirDb
 
 
 class OrderDb(db.Model):
@@ -12,6 +13,7 @@ class OrderDb(db.Model):
     AccountId = db.Column(db.Integer)
     QRCode = db.Column(db.String)
     used = db.Column(db.Boolean)
+    type = db.Column(db.Integer)
 
     # def __init__(self, OrderId, OrderDate, TotalPrice, CreatedAt, QRCode, used):
     #     self.OrderId = OrderId
@@ -21,13 +23,14 @@ class OrderDb(db.Model):
     #     self.QRCode = QRCode
     #     self.used = used
 
-    def __init__(self, OrderDate, TotalPrice, CreatedAt, AccountId, QRCode):
+    def __init__(self, OrderDate, TotalPrice, CreatedAt, AccountId, QRCode, type):
         self.OrderDate = OrderDate
         self.TotalPrice = TotalPrice
         self.CreatedAt = CreatedAt
         self.QRCode = QRCode
         self.AccountId = AccountId
         self.used = False
+        self.type = type
 
     def save_to_db(self):
         db.session.add(self)
@@ -44,12 +47,24 @@ class OrderDb(db.Model):
     def qr_detail_ticket(qr):
         return db.session.query(OrderDb.OrderDate, TicketDb.NumberPerson, AgeGroupDb.Description).select_from(OrderDb).\
             join(TicketDb, OrderDb.OrderId == TicketDb.OrderId).\
-            join(AgeGroupDb, TicketDb.TicketType == AgeGroupDb.GroupId).filter(OrderDb.QRCode == qr).all()
+            join(AgeGroupDb, TicketDb.TicketType == AgeGroupDb.GroupId).filter(OrderDb.QRCode == qr).\
+            filter(OrderDb.type == 0).all()
+
+    @staticmethod
+    def qr_detail_order_sou(qr):
+        return db.session.query(OrderDb.OrderDate, TicketDb.NumberPerson, AgeGroupDb.Description).select_from(OrderDb). \
+            join(TicketDb, OrderDb.OrderId == TicketDb.OrderId). \
+            join(AgeGroupDb, TicketDb.TicketType == AgeGroupDb.GroupId).filter(OrderDb.QRCode == qr). \
+            filter(OrderDb.type == 1).all()
 
     @classmethod
     def find_by_account(cls, id):
         return cls.query.filter_by(AccountId=id).first()
 
     def json(self):
+        if self.type == 0:
+            order_type = 'Ve vao'
+        elif self.type == 1:
+            order_type = 'Don dat'
         return {'OrderId': self.OrderId, 'OrderDate': self.OrderDate, 'TotalPrice': self.TotalPrice,
-                'CreatedAt': self.CreatedAt, 'QRCode': self.QRCode, 'used': self.used}
+                'CreatedAt': self.CreatedAt, 'QRCode': self.QRCode, 'used': self.used, 'order_type': order_type}

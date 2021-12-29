@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Dec 29, 2021 at 05:21 AM
+-- Generation Time: Dec 29, 2021 at 06:55 AM
 -- Server version: 10.4.22-MariaDB
 -- PHP Version: 8.1.1
 
@@ -181,7 +181,8 @@ CREATE TABLE `orders` (
   `CreatedAt` date NOT NULL,
   `AccountId` int(4) NOT NULL,
   `QRCode` varchar(100) DEFAULT NULL,
-  `used` tinyint(4) DEFAULT NULL
+  `used` tinyint(4) DEFAULT NULL,
+  `type` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
@@ -193,8 +194,7 @@ CREATE TABLE `orders` (
 CREATE TABLE `orderssouvenirdetail` (
   `OrderId` int(4) NOT NULL,
   `SouvenirId` int(4) NOT NULL,
-  `Quantity` int(2) NOT NULL,
-  `PriceEach` int(4) NOT NULL
+  `Quantity` int(2) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------

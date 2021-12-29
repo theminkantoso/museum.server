@@ -56,7 +56,7 @@ class OrderTicket(Resource):
                 order_check_dup = OrderDb.find_by_qr(qrcode_str)
 
             order = OrderDb(OrderDate=order_date, TotalPrice=total, CreatedAt=date.today(), AccountId=account.AccountId,
-                            QRCode=qrcode_str)
+                            QRCode=qrcode_str, type=0)
             order.save_to_db()
             order_id = OrderDb.find_by_qr(qrcode_str)
             children_ticket = TicketDb(OrderId=order_id.OrderId, NumberPerson=children, TicketType=1)
@@ -136,8 +136,8 @@ class OrdersId(Resource):
     @jwt_required()
     def get(self, id):
         try:
-            return send_file('./statics/images/qr_code_ticket/qr' + str(id) + '.jpeg', mimetype='image/jpeg', as_attachment=True,
-                             download_name=random_string() + '.jpeg')
+            return send_file('./statics/images/qr_code_ticket/qr' + str(id) + '.jpeg', mimetype='image/jpeg',
+                             as_attachment=True, download_name=random_string() + '.jpeg')
         except Exception as e:
             print(e)
             return {"msg": "error"}, 404
