@@ -1,6 +1,7 @@
 from src.database import db
 from src.models.ticketDb import TicketDb
 from src.models.ageGroupDb import AgeGroupDb
+from src.models.orders_souvenirDb import OrderSouvernirDetailDb
 from src.models.souvenirDb import SouvenirDb
 
 
@@ -45,21 +46,25 @@ class OrderDb(db.Model):
 
     @staticmethod
     def qr_detail_ticket(qr):
-        return db.session.query(OrderDb.OrderDate, TicketDb.NumberPerson, AgeGroupDb.Description).select_from(OrderDb).\
+        return db.session.query(TicketDb.NumberPerson, AgeGroupDb.Description).select_from(OrderDb).\
             join(TicketDb, OrderDb.OrderId == TicketDb.OrderId).\
             join(AgeGroupDb, TicketDb.TicketType == AgeGroupDb.GroupId).filter(OrderDb.QRCode == qr).\
             filter(OrderDb.type == 0).all()
 
     @staticmethod
     def qr_detail_order_sou(qr):
-        return db.session.query(OrderDb.OrderDate, TicketDb.NumberPerson, AgeGroupDb.Description).select_from(OrderDb). \
-            join(TicketDb, OrderDb.OrderId == TicketDb.OrderId). \
-            join(AgeGroupDb, TicketDb.TicketType == AgeGroupDb.GroupId).filter(OrderDb.QRCode == qr). \
+        return db.session.query(OrderSouvernirDetailDb.Quantity, SouvenirDb.Description).\
+            select_from(OrderDb).join(OrderSouvernirDetailDb, OrderDb.OrderId == OrderSouvernirDetailDb.OrderId). \
+            join(SouvenirDb, OrderSouvernirDetailDb.SouvernirId == SouvenirDb.SouvenirId).filter(OrderDb.QRCode == qr).\
             filter(OrderDb.type == 1).all()
 
     @classmethod
-    def find_by_account(cls, id):
-        return cls.query.filter_by(AccountId=id).first()
+    def find_by_account_ticket(cls, id):
+        return cls.query.filter_by(AccountId=id).filter_by(type=0).first()
+
+    @classmethod
+    def find_by_account_order(cls, id):
+        return cls.query.filter_by(AccountId=id).filter_by(type=1).first()
 
     def json(self):
         if self.type == 0:

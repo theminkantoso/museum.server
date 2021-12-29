@@ -38,8 +38,8 @@ class Account(Resource):
     parser.add_argument('password', type=str)
 
     def get(self):
-        print(OrderDb.qr_detail_ticket('74o55u395EaXq7R8d1KW')[0][1])
-        # pass
+        # print(OrderDb.qr_detail_ticket('74o55u395EaXq7R8d1KW')[0][1])
+        pass
 
     def post(self):
         data = Account.parser.parse_args()

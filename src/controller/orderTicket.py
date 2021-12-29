@@ -15,16 +15,6 @@ import string
 import qrcode
 
 
-def random_string():
-    str1 = ''.join((random.choice(string.ascii_letters) for x in range(10)))
-    str1 += ''.join((random.choice(string.digits) for x in range(10)))
-
-    sam_list = list(str1)
-    random.shuffle(sam_list)
-    final_string = ''.join(sam_list)
-    return final_string
-
-
 class OrderTicket(Resource):
     parser = reqparse.RequestParser()
     parser.add_argument('order_date')
@@ -47,12 +37,12 @@ class OrderTicket(Resource):
         elderly = data['elderly']
         total = data['total']
         try:
-            qrcode_str = random_string()
+            qrcode_str = OrderService.random_string()
 
             # prevent duplicate
             order_check_dup = OrderDb.find_by_qr(qrcode_str)
             while order_check_dup is not None:
-                qrcode_str = random_string()
+                qrcode_str = OrderService.random_string()
                 order_check_dup = OrderDb.find_by_qr(qrcode_str)
 
             order = OrderDb(OrderDate=order_date, TotalPrice=total, CreatedAt=date.today(), AccountId=account.AccountId,
@@ -82,7 +72,8 @@ class OrderTicket(Resource):
             img.save('./statics/images/qr_code_ticket/qr'+str(order_id.OrderId)+'.jpeg')
             # return send_file(buffer, mimetype='image/jpeg', as_attachment=True, download_name=random_string()+'.jpeg')
             return send_file('./statics/images/qr_code_ticket/qr' + str(order_id.OrderId) +'.jpeg',
-                             mimetype='image/jpeg', as_attachment=True, download_name=random_string()+'.jpeg')
+                             mimetype='image/jpeg', as_attachment=True,
+                             download_name=OrderService.random_string()+'.jpeg')
         except Exception as e:
             print(e)
             return {"msg": "Error saving your ticket"}, 400
@@ -114,30 +105,36 @@ class OrderQR(Resource):
                 if not qr_check.used:
                     qr_check.used = True
                     qr_check.commit_to_db()
-                    order_detail = OrderDb.qr_detail_ticket(qrcode)
-                    return {'msg': 'success', 'order_detail': OrderService.convert_to_dict(order_detail)}, 200
+                    if qr_check.type == 0:
+                        order_detail = OrderDb.qr_detail_ticket(qrcode)
+                        return {'msg': 'success', 'order_date': qr_check.OrderDate.isoformat(),
+                                'order_detail': OrderService.convert_to_dict_ticket(order_detail)}, 200
+                    elif qr_check.type == 1:
+                        order_detail = OrderDb.qr_detail_order_sou(qrcode)
+                        return {'msg': 'success', 'order_date': qr_check.OrderDate.isoformat(),
+                                'order_detail': OrderService.convert_to_dict_souvenir(order_detail)}, 200
                 else:
                     return {'msg': 'Ban da dung ve nay roi!'}, 200
         return {'message': 'no order matching'}, 404
 
 
-class Orders(Resource):
+class TicketOrders(Resource):
 
     @jwt_required()
     def get(self):
         email = get_jwt_identity()
         account = AccountDb.find_by_email(email)
-        orders = OrderDb.find_by_account(account.AccountId)
+        orders = OrderDb.find_by_account_ticket(account.AccountId)
         return {'orders': list(map(lambda x: x.json(), orders))}, 200
 
 
-class OrdersId(Resource):
+class TicketOrdersId(Resource):
 
     @jwt_required()
     def get(self, id):
         try:
             return send_file('./statics/images/qr_code_ticket/qr' + str(id) + '.jpeg', mimetype='image/jpeg',
-                             as_attachment=True, download_name=random_string() + '.jpeg')
+                             as_attachment=True, download_name=OrderService.random_string() + '.jpeg')
         except Exception as e:
             print(e)
             return {"msg": "error"}, 404
