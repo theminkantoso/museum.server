@@ -1,7 +1,7 @@
 import re
 
 from flask_restful import Resource, reqparse
-from src.models.souvenirDb import Souvenir
+from src.models.souvenirDb import SouvenirDb
 
 
 regex_id = '^[0-9]*$'
@@ -26,17 +26,17 @@ class souvenir(Resource):
     def get(self, id):
         if not validate_regex(id, regex_id):
             return {"message": "invalid Id "}, 400
-        sou = Souvenir.find_by_id(id)
+        sou = SouvenirDb.find_by_id(id)
         if sou:
             return sou.json(), 200
         return {'message': 'Souvenir not found'}, 404
 
     def post(self):
         data = souvenir.parser.parse_args()
-        if Souvenir.find_by_name(data.get('Name')):
+        if SouvenirDb.find_by_name(data.get('Name')):
             return {'message': "An souvenir with name '{}' already exists.".format(data.get('Name'))}, 400
 
-        sou = Souvenir(**data)
+        sou = SouvenirDb(**data)
         try:
             sou.save_to_db()
         except:
@@ -46,7 +46,7 @@ class souvenir(Resource):
     def delete(self, id):
         if not validate_regex(id, regex_id):
             return {"message": "invalid Id "}, 400
-        sou = Souvenir.find_by_id(id)
+        sou = SouvenirDb.find_by_id(id)
         if sou:
             try:
                 sou.delete_from_db()
@@ -59,7 +59,7 @@ class souvenir(Resource):
         if not validate_regex(id, regex_id):
             return {"message": "invalid Id "}, 400
         data = souvenir.parser.parse_args()
-        sou = Souvenir.find_by_id(id)
+        sou = SouvenirDb.find_by_id(id)
 
         if sou:
             try:
@@ -77,5 +77,5 @@ class souvenir(Resource):
 
 class souvenirs(Resource):
     def get(self):
-        return {'souvenirs': list(map(lambda x: x.json(), Souvenir.query.all()))}, 200
+        return {'souvenirs': list(map(lambda x: x.json(), SouvenirDb.query.all()))}, 200
 
