@@ -1,6 +1,7 @@
 from datetime import timedelta
 import os
 
+SECRET_KEY = "HAHA"
 SQLALCHEMY_POOL_SIZE = 1000   # Để tạm là 300 -> setTimeOutError sqlachemy
 MAIL_SERVER = 'smtp.gmail.com'
 MAIL_PORT = 587

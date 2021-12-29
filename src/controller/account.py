@@ -5,19 +5,17 @@ from src.models.accountDb import AccountDb, RevokedTokenModel
 from werkzeug.security import generate_password_hash, check_password_hash
 from datetime import datetime
 from itsdangerous import URLSafeTimedSerializer, SignatureExpired
-from src.controller import my_mail
+from src.controller import my_mail, oauth
 from flask import url_for, jsonify
-# from flask_jwt_extended import create_access_token, jwt_required, current_user, get_jwt_identity, get_raw_jwt
 from flask_jwt_extended import create_access_token, jwt_required, get_jwt_identity, get_jwt
 from flask_mail import Message
 
-import json
 import re
 import random
 import string
-import jwt
-import smtplib
-from email.message import EmailMessage
+# import jwt
+# import smtplib
+# from email.message import EmailMessage
 su = URLSafeTimedSerializer('Thisisasecret!') # reformat later
 
 
@@ -199,6 +197,24 @@ class UserLogoutAccess(Resource):
         except:
 
             return {'msg': 'Something went wrong'}, 500
+
+
+class GoogleLogin(Resource):
+
+    def get(self):
+        google = oauth.create_client('google')
+        redirected_uri = '/authorize'
+        return google.authorize_redirect(redirected_uri)
+
+
+class GoogleLoginAuthorize(Resource):
+
+    def get(self):
+        google = oauth.create_client('google')  # create the google oauth client
+        token = google.authorize_access_token()
+        resp = google.get('userinfo').json()
+        print(f"\n{resp}\n")
+        return {}, 200
 
 
 

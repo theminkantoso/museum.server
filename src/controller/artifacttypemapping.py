@@ -1,6 +1,7 @@
 from flask_restful import Resource, reqparse
 from src.models.artifacttypemappingDb import ArtifactTypeMapping
 
+
 class artifactTypeMapping(Resource):
     parser = reqparse.RequestParser()
     parser.add_argument('ArtifactId', type=int)

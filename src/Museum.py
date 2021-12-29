@@ -1,13 +1,16 @@
 from flask_restful import Api
 from flask import Flask
 from database import db
+from flask_cors import CORS
+
 
 from controller.images import image, Images
 from controller.artifact import artifact, artifacts
 from controller.museumevent import Event, Events
 from controller.souvenir import souvenir, souvenirs
 from controller.artifacttype import artifactType, artifactTypes
-from src.controller.account import Account, Register, Confirmation, Repass, ChangePass, UserLogoutAccess
+from src.controller.account import Account, Register, Confirmation, Repass, ChangePass, UserLogoutAccess\
+    # , GoogleLogin, GoogleLoginAuthorize
 from src.controller.orderTicket import OrderTicket, OrderQR
 
 from controller.artifacttypemapping import artifactTypeMapping, artifactTypeMappings, artifactsType
@@ -23,6 +26,7 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config.from_pyfile('core/config.py')
 
 api = Api(app)
+CORS(app)
 controller.init_app(app)
 
 api.add_resource(image, '/image/<int:id>',  '/image')
@@ -46,6 +50,8 @@ api.add_resource(Confirmation, '/confirm_email/<token>')
 api.add_resource(Repass, '/repass')
 api.add_resource(ChangePass, '/changepass')
 api.add_resource(UserLogoutAccess, '/logout')
+# api.add_resource(GoogleLogin, '/google')
+# api.add_resource(GoogleLoginAuthorize, '/authorize')
 
 api.add_resource(Rattings, '/rattings')
 api.add_resource(ratting, '/ratting/<int:id>', '/ratting')
