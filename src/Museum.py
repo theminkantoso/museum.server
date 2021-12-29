@@ -49,8 +49,8 @@ api.add_resource(UserLogoutAccess, '/logout')
 api.add_resource(Ratings, '/ratings')
 api.add_resource(rating, '/rating')
 
-api.add_resource(Notifications, '/notifications/<int:AccId>')
-api.add_resource(notification, '/notification/<int:id>', '/notification/<int:Id>&<int:AccId>', '/notification')
+api.add_resource(Notifications, '/notifications')
+api.add_resource(notification, '/notification/<int:Id>', '/notification')
 api.add_resource(NotificationsAll, '/notificationsAll')
 
 api.add_resource(artifactTypeMapping, '/artifactTypeMapping/<int:id>&<int:typeId>', '/artifactTypeMapping')
