@@ -1,6 +1,6 @@
 import re
 from datetime import datetime
-from flask_jwt_extended import get_jwt_identity
+from flask_jwt_extended import get_jwt_identity, jwt_required
 
 from src.models.accountDb import AccountDb
 
@@ -19,7 +19,7 @@ def validate_regex(input_string, regex):
 
 
 class notification(Resource):
-
+    @jwt_required()
     def get(self, Id):
         if not validate_regex(str(Id), regex_id):
             return {"message": "invalid Id "}, 400
@@ -28,14 +28,16 @@ class notification(Resource):
             return r.json(), 200
         return {'message': ' not found.'}, 404
 
+    @jwt_required()
     def post(self):
-        id_acc = get_jwt_identity()
+        email_acc = get_jwt_identity()
+        id_acc = AccountDb.find_by_email(email_acc).AccountId
         parser = reqparse.RequestParser()
         parser.add_argument('Title', type=str)
         parser.add_argument('Content', type=str)
         data = parser.parse_args()
         print(data)
-        if not validate_regex(str(data["AccountId"]), regex_id):
+        if not validate_regex(str(id_acc), regex_id):
             return {"message": "invalid AccountId"}, 400
         timeNow = datetime.now()
         r = Notification(AccountId=id_acc, Title=data["Title"],
@@ -46,6 +48,7 @@ class notification(Resource):
         except:
             return {"message": "An error occurred inserting the notification."}, 500
 
+    @jwt_required()
     def put(self, Id):
         if not validate_regex(str(Id), regex_id):
             return {"message": "invalid Id"}, 400
@@ -65,6 +68,7 @@ class notification(Resource):
                 return {"message": "An error occurred updating the notification."}, 500
         return {'message': 'not found.'}, 404
 
+    @jwt_required()
     def delete(self, Id):
         if not validate_regex(str(Id), regex_id):
             return {"message": "invalid Id"}, 400
@@ -84,23 +88,27 @@ class NotificationsAll(Resource):
     parser.add_argument('Title', type=str)
     parser.add_argument('Content', type=str)
 
+    @jwt_required()
     def post(self):
         data = NotificationsAll.parser.parse_args()
         accounts = AccountDb.all_accounts()
         timeNow = datetime.now()
         for acc in accounts:
-            r = Notification(AccountId=acc.AccountId, Title=data["Title"],
-                             Content=data["Content"], Time=timeNow, Unread=0)
-            try:
-                r.save_to_db()
-            except:
-                return {"message": "An error occurred inserting the notification."}, 500
+            if acc.RoleId != 0:
+                r = Notification(AccountId=acc.AccountId, Title=data["Title"],
+                                 Content=data["Content"], Time=timeNow, Unread=0)
+                try:
+                    r.save_to_db()
+                except:
+                    return {"message": "An error occurred inserting the notification."}, 500
         return {"message": "Notification added"}, 200
 
 
 class Notifications(Resource):  # tất cả thông báo của mỗi người dùng.
+    @jwt_required()
     def get(self):
-        id_acc = get_jwt_identity()
+        email_acc = get_jwt_identity()
+        id_acc = AccountDb.find_by_email(email_acc).AccountId
         if not validate_regex(id_acc, regex_id):
             return {"message": "invalid AccountId"}, 400
         data = {'notifications': list(map(lambda x: x.json(), Notification.find_All_Notifications_by_AccId(id_acc)))}
