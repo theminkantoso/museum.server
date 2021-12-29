@@ -2,7 +2,7 @@ from src.database import db
 from sqlalchemy.orm import relationship
 
 
-class Souvenir(db.Model):
+class SouvenirDb(db.Model):
     __tablename__ = 'souvenir'
     SouvenirId = db.Column(db.Integer, primary_key=True)
     Name = db.Column(db.String(50))
