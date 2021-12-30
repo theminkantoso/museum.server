@@ -24,7 +24,7 @@ class souvenir(Resource):
     parser.add_argument('ImageId', type=int)
 
     def get(self, id):
-        if not validate_regex(id, regex_id):
+        if not validate_regex(str(id), regex_id):
             return {"message": "invalid Id "}, 400
         sou = SouvenirDb.find_by_id(id)
         if sou:
@@ -44,7 +44,7 @@ class souvenir(Resource):
         return {"Message": "Souvenir added."}, 200
 
     def delete(self, id):
-        if not validate_regex(id, regex_id):
+        if not validate_regex(str(id), regex_id):
             return {"message": "invalid Id "}, 400
         sou = SouvenirDb.find_by_id(id)
         if sou:
@@ -56,7 +56,7 @@ class souvenir(Resource):
         return {'message': 'Souvenir not found.'}, 404
 
     def put(self, id):
-        if not validate_regex(id, regex_id):
+        if not validate_regex(str(id), regex_id):
             return {"message": "invalid Id "}, 400
         data = souvenir.parser.parse_args()
         sou = SouvenirDb.find_by_id(id)

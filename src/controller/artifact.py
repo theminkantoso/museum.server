@@ -23,7 +23,7 @@ class artifact(Resource):
     parser.add_argument('ImageId', type=int)
 
     def get(self, id):
-        if not validate_regex(id, regex_id):
+        if not validate_regex(str(id), regex_id):
             return {"message": "invalid Id "}, 400
         atf = Artifact.find_by_id(id)
         if atf:
@@ -42,7 +42,7 @@ class artifact(Resource):
         return {"message": "Artifact added."}, 200
 
     def delete(self, id):
-        if not validate_regex(id, regex_id):
+        if not validate_regex(str(id), regex_id):
             return {"message": "invalid Id "}, 400
         art = Artifact.find_by_id(id)
         if art:
@@ -54,7 +54,7 @@ class artifact(Resource):
         return {'message': 'Artifact not found.'}, 404
 
     def put(self, id):
-        if not validate_regex(id, regex_id):
+        if not validate_regex(str(id), regex_id):
             return {"message": "invalid Id "}, 400
         data = artifact.parser.parse_args()
         art = Artifact.find_by_id(id)
