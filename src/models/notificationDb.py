@@ -10,7 +10,7 @@ class Notification(db.Model):
     AccountId = db.Column(db.Integer, db.ForeignKey('account.AccountId'))
     Title = db.Column(db.String(50))
     Content = db.Column(db.String(200))
-    Time = db.Column(db.Date)
+    Time = db.Column(db.DateTime)
     Unread = db.Column(db.Boolean)
 
     def __init__(self, NotificationId, AccountId, Title, Content, Time, Unread):
