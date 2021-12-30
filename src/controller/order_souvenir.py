@@ -43,7 +43,7 @@ class OrderSouvenir(Resource):
             order.save_to_db()
             order_id = OrderDb.find_by_qr(qrcode_str)
             for x, y in dict_in.items():
-                order_sou_models = OrderSouvernirDetailDb(orderId=order_id.OrderId, souvernirId=x, quantity=y)
+                order_sou_models = OrderSouvernirDetailDb(orderId=order_id.OrderId, souvernirId=int(x), quantity=y)
                 order_sou_models.save_to_db()
 
             qr = qrcode.QRCode(
