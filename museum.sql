@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Dec 29, 2021 at 06:55 AM
+-- Generation Time: Dec 30, 2021 at 07:58 AM
 -- Server version: 10.4.22-MariaDB
 -- PHP Version: 8.1.1
 
@@ -164,7 +164,7 @@ CREATE TABLE `notification` (
   `AccountId` int(4) NOT NULL,
   `Title` varchar(50) NOT NULL,
   `Content` varchar(200) NOT NULL,
-  `Time` date NOT NULL,
+  `Time` datetime NOT NULL,
   `Unread` int(1) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 

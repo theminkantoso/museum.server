@@ -1,3 +1,4 @@
+import ast
 import random
 import string
 
@@ -24,4 +25,13 @@ class OrderService():
         final_string = ''.join(sam_list)
         return final_string
 
+    @staticmethod
+    def convert_to_dict_sou(str_arr):
+        dict_out = {}
+        for i in range(len(str_arr)):
+            temp = str_arr[i]
+            dict_temp = ast.literal_eval(temp)
+            for x, y in dict_temp.items():
+                dict_out[x] = y
+        return dict_out
 
