@@ -1,5 +1,5 @@
 from flask_restful import Api
-from flask import Flask
+from flask import Flask, url_for
 from database import db
 
 from controller.images import image, Images
@@ -10,6 +10,7 @@ from controller.artifacttype import artifactType, artifactTypes
 from src.controller.account import Account, Register, Confirmation, Repass, ChangePass, UserLogoutAccess
 from src.controller.orderTicket import OrderTicket, OrderQR, TicketOrders, TicketOrdersId
 from src.controller.order_souvenir import OrderSouvenir, SouvenirOrders, SouvenirOrdersId
+from src.controller.google import Google, GoogleLoginAuthorize
 
 from controller.artifacttypemapping import artifactTypeMapping, artifactTypeMappings, artifactsType
 from controller.accountfavoriteartifact import accountFA, accountFAs
@@ -69,6 +70,9 @@ api.add_resource(TicketOrdersId, '/ticketorders/<int:id>')
 api.add_resource(OrderSouvenir, '/souvenirorder')
 api.add_resource(SouvenirOrders, '/souvenirorders')
 api.add_resource(SouvenirOrdersId, '/souvenirorders/<int:id>')
+
+api.add_resource(Google, '/google')
+api.add_resource(GoogleLoginAuthorize, '/authorize', endpoint="authorize")
 
 
 # flask_jwt_extended == 3.21.0

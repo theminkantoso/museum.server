@@ -39,7 +39,7 @@ class Account(Resource):
         if check_password_hash(user.Password, password):
             if user.isActivated:
                 access_token = create_access_token(identity=email.lower())
-                return jsonify(access_token=access_token, role="1")
+                return jsonify(access_token=access_token, role=user.RoleId)
             else:
                 return {"msg": "Please confirm your account via your email"}, 401
         return {"msg": "Incorrect username or password"}, 401
@@ -70,12 +70,12 @@ class Register(Resource):
             return {'msg': "Invalid email or password"}, 400
         if AccountDb.find_by_email(email.lower()) is not None:
             return {'msg': "An account with this email already existed."}, 400
-        user = AccountDb(email=email.lower(), Password=generate_password_hash(password, method='sha256'),
-                         createdAt=datetime.now(), roleId=1)
+        user = AccountDb(email=email.lower(), password=generate_password_hash(password, method='sha256'), RoleId=0,
+                         isActivated=0, confirmedAt=None, GoogleId=None, CreateAt=datetime.now(), updatedAt=None)
         token = su.dumps(email.lower(), salt='email-confirm')
         link = url_for('confirmation', token=token, _external=False)
         try:
-            msg = Message('Confirm Email', sender='teammuseummobile@gmail.com', recipients=[email.lower()])
+            msg = Message('Confirm Email', sender=os.environ.get('MAIL'), recipients=[email.lower()])
             msg.body = 'Your link is http://127.0.0.1:5000{}'.format(link)
             my_mail.send(msg)
             user.save_to_db()
@@ -124,7 +124,7 @@ class Repass(Resource):
             get_user = AccountDb.find_by_email(email)
             new_password = AccountService.random_string()
             get_user.Password = generate_password_hash(new_password, method='sha256')
-            msg = Message('New Password Recovery', sender='teammuseummobile@gmail.com', recipients=[email.lower()])
+            msg = Message('New Password Recovery', sender=os.environ.get('MAIL'), recipients=[email.lower()])
             msg.body = 'Your new password is {}'.format(new_password)
             my_mail.send(msg)
             get_user.updatedAt = datetime.now()
