@@ -4,7 +4,7 @@ from src.database import db
 class AgeGroupDb(db.Model):
     __tablename__ = 'agegroup'
     GroupId = db.Column(db.Integer, primary_key=True)
-    Description = db.Column(db.String)
+    Description = db.Column(db.String(500))
     Price = db.Column(db.Integer)
 
     def __init__(self, GroupId, Description, Price):

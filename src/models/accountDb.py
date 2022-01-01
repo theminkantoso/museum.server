@@ -5,45 +5,25 @@ from werkzeug.security import generate_password_hash, check_password_hash
 class AccountDb(db.Model):
     __tablename__ = 'account'
     AccountId = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    # displayName = db.Column(db.String(50))
     email = db.Column(db.String(100))
     Password = db.Column(db.String)
-    RoleId = db.Column(db.Integer, server_default='1')
+    RoleId = db.Column(db.Integer, nullable=False, server_default='0')
     isActivated = db.Column(db.Boolean(), nullable=False, server_default='0')
     confirmedAt = db.Column(db.DateTime)
-    # RecoverPasswordCode = db.Column(db.String(50))
-    # ExpiredTimeCode = db.Column(db.DateTime)
-    # FacebookId = db.Column(db.String(50))
     GoogleId = db.Column(db.String(50))
     CreateAt = db.Column(db.DateTime)
     UpdateAt = db.Column(db.TIMESTAMP)
-    # ImageId = db.Column(db.Integer)
 
-    def __init__(self, AccountId, email, Password, RoleId,
-                 isActivated, confirmedAt,
-                GoogleId, CreateAt, UpdateAt,
-                ):
-        self.AccountId = AccountId
+    def __init__(self, email, password, RoleId, isActivated, confirmedAt, GoogleId, CreateAt, updatedAt):
         self.email = email
-        self.Password = Password
+        self.Password = password
         self.RoleId = RoleId
         self.isActivated = isActivated
         self.confirmedAt = confirmedAt
         self.GoogleId = GoogleId
         self.CreateAt = CreateAt
-        self.UpdateAt = UpdateAt
+        self.UpdateAt = updatedAt
 
-    def __init__(self, email, Password, createdAt, roleId):
-
-        self.email = email
-        self.Password = Password
-        self.CreateAt = createdAt
-        self.RoleId = roleId
-
-    # def json(self):
-    #     return {'Name': self.Name, 'Content': self.Content, 'Url': self.Url, 'Path': self.Path,
-    #             'MimeType': self.MimeType}
-    #
     @classmethod
     def find_account(cls, mail, passWord):
         return cls.query.filter_by(email=mail, Password=passWord).first()
@@ -51,6 +31,10 @@ class AccountDb(db.Model):
     @classmethod
     def find_by_email(cls, email):
         return cls.query.filter_by(email=email).first()
+
+    @classmethod
+    def all_accounts(cls):
+        return cls.query.all()
 
     @classmethod
     def check_password(cls, password, email):

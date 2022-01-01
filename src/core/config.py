@@ -3,6 +3,7 @@ import os
 
 SECRET_KEY = "HAHA"
 SQLALCHEMY_POOL_SIZE = 1000   # Để tạm là 300 -> setTimeOutError sqlachemy
+SECRET_KEY = 'abc'
 MAIL_SERVER = 'smtp.gmail.com'
 MAIL_PORT = 587
 MAIL_USERNAME = os.environ.get('MAIL')

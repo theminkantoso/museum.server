@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Dec 27, 2021 at 03:44 PM
+-- Generation Time: Jan 01, 2022 at 11:51 AM
 -- Server version: 10.4.22-MariaDB
 -- PHP Version: 8.1.1
 
@@ -30,11 +30,11 @@ SET time_zone = "+00:00";
 CREATE TABLE `account` (
   `AccountId` int(4) NOT NULL,
   `email` varchar(1000) NOT NULL,
-  `Password` varchar(10000) NOT NULL,
-  `RoleId` int(4) DEFAULT NULL,
+  `Password` varchar(10000) DEFAULT NULL,
+  `RoleId` int(4) NOT NULL DEFAULT 0,
   `isActivated` tinyint(4) DEFAULT NULL,
   `confirmedAt` datetime DEFAULT NULL,
-  `GoogleId` varchar(50) DEFAULT NULL,
+  `GoogleId` varchar(200) DEFAULT NULL,
   `CreateAt` date DEFAULT NULL,
   `UpdateAt` date DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
@@ -68,9 +68,9 @@ CREATE TABLE `accountfavoriteevent` (
 --
 
 CREATE TABLE `agegroup` (
-  `    GroupId` int(4) NOT NULL,
-  `    Description` varchar(500) NOT NULL,
-  `    Price` decimal(10,2) NOT NULL
+  `GroupId` int(4) NOT NULL,
+  `Description` varchar(500) NOT NULL,
+  `Price` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
@@ -164,7 +164,7 @@ CREATE TABLE `notification` (
   `AccountId` int(4) NOT NULL,
   `Title` varchar(50) NOT NULL,
   `Content` varchar(200) NOT NULL,
-  `Time` date NOT NULL,
+  `Time` datetime NOT NULL,
   `Unread` int(1) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
@@ -181,7 +181,8 @@ CREATE TABLE `orders` (
   `CreatedAt` date NOT NULL,
   `AccountId` int(4) NOT NULL,
   `QRCode` varchar(100) DEFAULT NULL,
-  `used` tinyint(4) DEFAULT NULL
+  `used` tinyint(4) DEFAULT NULL,
+  `type` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
@@ -193,8 +194,7 @@ CREATE TABLE `orders` (
 CREATE TABLE `orderssouvenirdetail` (
   `OrderId` int(4) NOT NULL,
   `SouvenirId` int(4) NOT NULL,
-  `Quantity` int(2) NOT NULL,
-  `PriceEach` int(4) NOT NULL
+  `Quantity` int(2) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
@@ -266,7 +266,7 @@ ALTER TABLE `accountfavoriteevent`
 -- Indexes for table `agegroup`
 --
 ALTER TABLE `agegroup`
-  ADD PRIMARY KEY (`    GroupId`);
+  ADD PRIMARY KEY (`GroupId`);
 
 --
 -- Indexes for table `artifact`
@@ -366,7 +366,7 @@ ALTER TABLE `account`
 -- AUTO_INCREMENT for table `agegroup`
 --
 ALTER TABLE `agegroup`
-  MODIFY `    GroupId` int(4) NOT NULL AUTO_INCREMENT;
+  MODIFY `GroupId` int(4) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `artifact`
@@ -463,7 +463,7 @@ ALTER TABLE `artifacttypemapping`
 -- Constraints for table `entryticket`
 --
 ALTER TABLE `entryticket`
-  ADD CONSTRAINT `fk_entryticket_AgeGroup` FOREIGN KEY (`TicketType`) REFERENCES `agegroup` (`    GroupId`),
+  ADD CONSTRAINT `fk_entryticket_AgeGroup` FOREIGN KEY (`TicketType`) REFERENCES `agegroup` (`GroupId`),
   ADD CONSTRAINT `fk_entryticket_Orders` FOREIGN KEY (`OrderId`) REFERENCES `orders` (`OrderId`);
 
 --
@@ -477,12 +477,6 @@ ALTER TABLE `museumevent`
 --
 ALTER TABLE `notification`
   ADD CONSTRAINT `fk_notification_account` FOREIGN KEY (`AccountId`) REFERENCES `account` (`AccountId`);
-
---
--- Constraints for table `orders`
---
-ALTER TABLE `orders`
-  ADD CONSTRAINT `fk_orders_account` FOREIGN KEY (`AccountId`) REFERENCES `account` (`AccountId`);
 
 --
 -- Constraints for table `orderssouvenirdetail`

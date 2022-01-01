@@ -1,55 +1,63 @@
+from src.services.souvenirService import SouvenirService
 from flask_restful import Resource, reqparse
-from src.models.souvenirDb import Souvenir
+
 
 class souvenir(Resource):
-    parser = reqparse.RequestParser()
-    parser.add_argument('SouvenirId', type=int)
-    parser.add_argument('Name', type=str)
-    parser.add_argument('Description', type=str)
-    parser.add_argument('Price', type=int)
-    parser.add_argument('Discount', type=float)
-    parser.add_argument('ImageId', type=int)
 
-    def get(self, name):
-        sou = Souvenir.find_by_name(name)
-        if sou:
-            return sou.json(), 200
+    def get(self, id):
+        sou = SouvenirService.souvenir_exist(id)
+        if sou == 0:
+            return {"message": "invalid Id "}, 400
+        elif sou:
+            return sou, 200
         return {'message': 'Souvenir not found'}, 404
 
     def post(self):
-        data = souvenir.parser.parse_args()
-        if Souvenir.find_by_name(data.get('Name')):
-            return {'message': "An souvenir with name '{}' already exists.".format(data.get('Name'))}, 400
-
-        sou = Souvenir(**data)
-        try:
-            sou.save_to_db()
-        except:
+        parser = reqparse.RequestParser()
+        parser.add_argument('SouvenirId', type=int)
+        parser.add_argument('Name', type=str)
+        parser.add_argument('Description', type=str)
+        parser.add_argument('Price', type=int)
+        parser.add_argument('ImageId', type=int)
+        data = parser.parse_args()
+        sou = SouvenirService.insert_souvenir(data)
+        if sou == 0:
+            return {'message': "An souvenir with name already exists."}, 400
+        elif sou == 1:
+            return {"Message": "Souvenir added."}, 200
+        else:
             return {"message": "An error occurred inserting the souvenir."}, 500
-        return {"Message": "Souvenir added. "}, 200
 
-    def delete(self, name):
-        sou = Souvenir.find_by_name(name)
-        if sou:
-            sou.delete_from_db()
+    def delete(self, id):
+        sou = SouvenirService.delete_souvenir(id)
+        if sou == 0:
+            return {"message": "invalid Id "}, 400
+        elif sou == 1:
             return {'message': 'Souvenir deleted.'}, 200
-        return {'message': 'Souvenir not found.'}, 404
+        elif sou == 2:
+            return {"message": "An error occurred deleting the souvenir."}, 500
+        else:
+            return {'message': 'Souvenir not found.'}, 404
 
-    def put(self, name):
-        data = souvenir.parser.parse_args()
-        sou = Souvenir.find_by_name(name)
+    def put(self, id):
+        parser = reqparse.RequestParser()
+        parser.add_argument('Name', type=str)
+        parser.add_argument('Description', type=str)
+        parser.add_argument('Price', type=int)
+        data = parser.parse_args()
+        sou = SouvenirService.update_souvenir(id, data)
+        if sou == 0:
+            return {"message": "invalid I"}, 400
+        elif sou == 1:
+            return {'message': 'Souvenir updated.'}, 200
+        elif sou == 2:
+            return {"message": "An error occurred updating the souvenir."}, 500
+        else:
+            return {'message': 'Souvenir not found.'}, 404
 
-        if sou:
-            sou.Name = data['Name']
-            sou.Description = data['Description']
-            sou.Price = data['Price']
-            sou.Discount = data['Discount']
-            sou.ImageId = data['ImageId']
-            sou.save_to_db()
-            return sou.json(), 200
-        return {'message': 'Souvenir not found.'}, 404
 
 class souvenirs(Resource):
     def get(self):
-        return {'souvenirs': list(map(lambda x: x.json(), Souvenir.query.all()))}, 200
+        sou = SouvenirService.all_souvenir()
+        return sou, 200
 
