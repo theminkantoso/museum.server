@@ -8,22 +8,20 @@ class SouvenirDb(db.Model):
     Name = db.Column(db.String(50))
     Description = db.Column(db.String(500))
     Price = db.Column(db.Integer)
-    Discount = db.Column(db.Float)
     ImageId = db.Column(db.Integer, db.ForeignKey('image.ImageId'))
 
     # Image = relationship("Image", foreign_keys=[ImageId])
 
-    def __init__(self, SouvenirId, Name, Description, Price, Discount, ImageId):
+    def __init__(self, SouvenirId, Name, Description, Price, ImageId):
         self.SouvenirId = SouvenirId
         self.Name = Name
         self.Description = Description
         self.Price = Price
-        self.Discount = Discount
         self.ImageId = ImageId
 
     def json(self):
         return {'SouvenirId': self.SouvenirId, 'Name': self.Name, 'Description': self.Description, 'Price': self.Price,
-                'Discount': self.Discount, 'ImageId': self.ImageId}
+                'ImageId': self.ImageId}
 
     @classmethod
     def find_by_name(cls, name):
