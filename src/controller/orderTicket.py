@@ -1,4 +1,4 @@
-from datetime import date
+from datetime import date, datetime
 from flask_restful import Resource, reqparse
 from io import BytesIO
 from flask import send_file
@@ -9,6 +9,20 @@ from src.models.orderDb import OrderDb
 from src.models.ageGroupDb import AgeGroupDb
 from src.models.accountDb import AccountDb
 from src.services.orderServices import OrderService
+
+
+def json1(order):
+    if isinstance(order.OrderDate, datetime.date):
+        order.OrderDate = order.OrderDate.strftime("%Y-%m-%d")
+    if isinstance(order.CreatedAt, datetime.date):
+        order.CreatedAt = order.CreatedAt.strftime("%Y-%m-%d")
+
+    return {
+        "OrderId": order.OrderId,
+        "OrderDate": order.OrderDate,
+        "TotalPrice": order.TotalPrice,
+        "CreatedAt": order.CreatedAt
+    }
 
 
 class OrderTicket(Resource):
@@ -71,9 +85,10 @@ class OrderTicket(Resource):
             buffer.seek(0)
             img.save('./statics/images/qr_code_ticket/qr'+str(order_id.OrderId)+'.jpeg')
             # return send_file(buffer, mimetype='image/jpeg', as_attachment=True, download_name=random_string()+'.jpeg')
-            return send_file('./statics/images/qr_code_ticket/qr' + str(order_id.OrderId) +'.jpeg',
-                             mimetype='image/jpeg', as_attachment=True,
-                             download_name=OrderService.random_string()+'.jpeg')
+            # return send_file('./statics/images/qr_code_ticket/qr' + str(order_id.OrderId) +'.jpeg',
+            #                  mimetype='image/jpeg', as_attachment=True,
+            #                  download_name=OrderService.random_string()+'.jpeg')
+            return {"urlImage": 'statics/images/qr_code_ticket/qr' + str(order_id.OrderId) + '.jpeg'}
         except Exception as e:
             print(e)
             return {"msg": "Error saving your ticket"}, 400
@@ -89,7 +104,7 @@ class OrderQR(Resource):
     parser = reqparse.RequestParser()
     parser.add_argument('qrcode')
 
-    def get(self):
+    def post(self):
         data = OrderQR.parser.parse_args()
         qrcode = data['qrcode']
         qr_check = OrderDb.find_by_qr(qr=qrcode)
@@ -125,7 +140,8 @@ class TicketOrders(Resource):
         email = get_jwt_identity()
         account = AccountDb.find_by_email(email)
         orders = OrderDb.find_by_account_ticket(account.AccountId)
-        return {'orders': list(map(lambda x: x.json(), orders))}, 200
+        # return {'orders': list(map(lambda x: x.json(), orders))}, 200
+        return {'orders': list(map(lambda x: json1(x), orders))}, 200
 
 
 class TicketOrdersId(Resource):
@@ -133,8 +149,9 @@ class TicketOrdersId(Resource):
     @jwt_required()
     def get(self, id):
         try:
-            return send_file('./statics/images/qr_code_ticket/qr' + str(id) + '.jpeg', mimetype='image/jpeg',
-                             as_attachment=True, download_name=OrderService.random_string() + '.jpeg')
+            # return send_file('./statics/images/qr_code_ticket/qr' + str(id) + '.jpeg', mimetype='image/jpeg',
+            #                  as_attachment=True, download_name=OrderService.random_string() + '.jpeg')
+            return {"urlImage": 'statics/images/qr_code_ticket/qr' + str(id) + '.jpeg'}
         except Exception as e:
             print(e)
             return {"msg": "error"}, 404

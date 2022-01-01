@@ -4,6 +4,8 @@ import string
 import qrcode
 from datetime import datetime
 
+from src.models.orderDb import OrderDb
+
 
 class OrderService():
     @staticmethod
@@ -56,4 +58,18 @@ class OrderService():
             return out_date
         except:
             return ''
+
+    @staticmethod
+    def json1(order: OrderDb):
+        if isinstance(order.OrderDate, datetime.date):
+            order.OrderDate = order.OrderDate.strftime("%Y-%m-%d")
+        if isinstance(order.CreatedAt, datetime.date):
+            order.CreatedAt = order.CreatedAt.strftime("%Y-%m-%d")
+
+        return {
+            "OrderId": order.OrderId,
+            "OrderDate": order.OrderDate,
+            "TotalPrice": order.TotalPrice,
+            "CreatedAt": order.CreatedAt
+        }
 

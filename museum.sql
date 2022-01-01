@@ -130,7 +130,7 @@ CREATE TABLE `entryticket` (
 
 CREATE TABLE `image` (
   `ImageId` int(4) NOT NULL,
-  `Name` varchar(22) NOT NULL,
+  `Name` varchar(100) NOT NULL,
   `Content` varchar(100) DEFAULT NULL,
   `Url` blob DEFAULT NULL,
   `Path` varchar(100) DEFAULT NULL,

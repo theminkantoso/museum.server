@@ -62,9 +62,10 @@ class OrderSouvenir(Resource):
             img.get_image().save(buffer, 'JPEG', quality=70)
             buffer.seek(0)
             img.save('./statics/images/qr_code_order/qr' + str(order_id.OrderId) + '.jpeg')
-            return send_file('./statics/images/qr_code_order/qr' + str(order_id.OrderId) + '.jpeg',
-                             mimetype='image/jpeg', as_attachment=True,
-                             download_name=OrderService.random_string() + '.jpeg')
+            # return send_file('./statics/images/qr_code_order/qr' + str(order_id.OrderId) + '.jpeg',
+            #                  mimetype='image/jpeg', as_attachment=True,
+            #                  download_name=OrderService.random_string() + '.jpeg')
+            return {"urlImage": 'statics/images/qr_code_order/qr' + str(order_id.OrderId) + '.jpeg'}
         except Exception as e:
             print(e)
             return {"msg": "Error saving your order"}, 400
@@ -78,6 +79,7 @@ class SouvenirOrders(Resource):
         account = AccountDb.find_by_email(email)
         orders = OrderDb.find_by_account_order(account.AccountId)
         return {'orders': list(map(lambda x: x.json(), orders))}, 200
+        # return {'orders': list(map(lambda x: x.json1(), orders))}, 200
 
 
 class SouvenirOrdersId(Resource):
@@ -85,8 +87,9 @@ class SouvenirOrdersId(Resource):
     @jwt_required()
     def get(self, id):
         try:
-            return send_file('./statics/images/qr_code_order/qr' + str(id) + '.jpeg', mimetype='image/jpeg',
-                             as_attachment=True, download_name=OrderService.random_string() + '.jpeg')
+            # return send_file('./statics/images/qr_code_order/qr' + str(id) + '.jpeg', mimetype='image/jpeg',
+            #                  as_attachment=True, download_name=OrderService.random_string() + '.jpeg')
+            return {"urlImage": 'statics/images/qr_code_order/qr' + str(id) + '.jpeg'}
         except Exception as e:
             print(e)
             return {"msg": "error"}, 404
