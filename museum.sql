@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Dec 30, 2021 at 08:43 AM
+-- Generation Time: Jan 01, 2022 at 11:51 AM
 -- Server version: 10.4.22-MariaDB
 -- PHP Version: 8.1.1
 
@@ -30,11 +30,11 @@ SET time_zone = "+00:00";
 CREATE TABLE `account` (
   `AccountId` int(4) NOT NULL,
   `email` varchar(1000) NOT NULL,
-  `Password` varchar(10000) NOT NULL,
-  `RoleId` int(4) DEFAULT NULL,
+  `Password` varchar(10000) DEFAULT NULL,
+  `RoleId` int(4) NOT NULL DEFAULT 0,
   `isActivated` tinyint(4) DEFAULT NULL,
   `confirmedAt` datetime DEFAULT NULL,
-  `GoogleId` varchar(50) DEFAULT NULL,
+  `GoogleId` varchar(200) DEFAULT NULL,
   `CreateAt` date DEFAULT NULL,
   `UpdateAt` date DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
