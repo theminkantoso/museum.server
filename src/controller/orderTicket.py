@@ -10,10 +10,6 @@ from src.models.ageGroupDb import AgeGroupDb
 from src.models.accountDb import AccountDb
 from src.services.orderServices import OrderService
 
-import random
-import string
-import qrcode
-
 
 class OrderTicket(Resource):
     parser = reqparse.RequestParser()
@@ -37,6 +33,9 @@ class OrderTicket(Resource):
         elderly = data['elderly']
         total = data['total']
         try:
+            order_date = OrderService.convert_date(order_date)
+            if order_date == '':
+                return {'msg': 'Invalid input'}, 400
             qrcode_str = OrderService.random_string()
 
             # prevent duplicate
@@ -56,14 +55,15 @@ class OrderTicket(Resource):
             adult_ticket.save_to_db()
             elderly_ticket.save_to_db()
 
-            qr = qrcode.QRCode(
-                version=1,
-                error_correction=qrcode.constants.ERROR_CORRECT_L,
-                box_size=10,
-                border=4,
-            )
-            qr.add_data(qrcode_str)
-            qr.make(fit=True)
+            qr = OrderService.generate_qr(qrcode_str)
+            # qr = qrcode.QRCode(
+            #     version=1,
+            #     error_correction=qrcode.constants.ERROR_CORRECT_L,
+            #     box_size=10,
+            #     border=4,
+            # )
+            # qr.add_data(qrcode_str)
+            # qr.make(fit=True)
             img = qr.make_image(fill_color="black", back_color="white")
 
             buffer = BytesIO()

@@ -10,26 +10,10 @@ from flask import url_for, jsonify
 # from flask_jwt_extended import create_access_token, jwt_required, current_user, get_jwt_identity, get_raw_jwt
 from flask_jwt_extended import create_access_token, jwt_required, get_jwt_identity, get_jwt
 from flask_mail import Message
-from src.models.orderDb import OrderDb
+# from src.models.orderDb import OrderDb
+from src.services.accountService import AccountService
 
-# import json
-import re
-import random
-import string
-# import jwt
-# import smtplib
-# from email.message import EmailMessage
 su = URLSafeTimedSerializer('Thisisasecret!')  # reformat later
-
-
-def random_string():
-    str1 = ''.join((random.choice(string.ascii_letters) for x in range(6)))
-    str1 += ''.join((random.choice(string.digits) for x in range(6)))
-
-    sam_list = list(str1)
-    random.shuffle(sam_list)
-    final_string = ''.join(sam_list)
-    return final_string
 
 
 class Account(Resource):
@@ -46,8 +30,8 @@ class Account(Resource):
         email = data['email']
         password = data['password']
         regex_mail = r'\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b'
-        pattern_mail = re.compile(regex_mail)
-        if not pattern_mail.fullmatch(email.lower()) or not password.isalnum():
+        # pattern_mail = re.compile(regex_mail)
+        if not AccountService.validate_regex(email.lower(), regex_mail) or not password.isalnum():
             return {'msg': "Invalid email or password"}, 401
         if AccountDb.find_by_email(email.lower()) is None:
             return {'msg': "Incorrect username or password"}, 401
@@ -80,8 +64,9 @@ class Register(Resource):
         email = data['email']
         password = data['password']
         regex_mail = r'\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b'
-        pattern_mail = re.compile(regex_mail)
-        if not pattern_mail.fullmatch(email.lower()) or not password.isalnum():
+        # pattern_mail = re.compile(regex_mail)
+        # if not pattern_mail.fullmatch(email.lower()) or not password.isalnum():
+        if not AccountService.validate_regex(email.lower(), regex_mail) or not password.isalnum():
             return {'msg': "Invalid email or password"}, 400
         if AccountDb.find_by_email(email.lower()) is not None:
             return {'msg': "An account with this email already existed."}, 400
@@ -129,14 +114,15 @@ class Repass(Resource):
         data = Repass.parser.parse_args()
         email = data['email']
         regex_mail = r'\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b'
-        pattern_mail = re.compile(regex_mail)
-        if not pattern_mail.fullmatch(email.lower()):
+        # pattern_mail = re.compile(regex_mail)
+        # if not pattern_mail.fullmatch(email.lower()):
+        if not AccountService.validate_regex(email.lower(), regex_mail):
             return {'msg': "Invalid email"}, 400
         if AccountDb.find_by_email(email.lower()) is None:
             return {'msg': "No account with this email"}, 400
         try:
             get_user = AccountDb.find_by_email(email)
-            new_password = random_string()
+            new_password = AccountService.random_string()
             get_user.Password = generate_password_hash(new_password, method='sha256')
             msg = Message('New Password Recovery', sender='teammuseummobile@gmail.com', recipients=[email.lower()])
             msg.body = 'Your new password is {}'.format(new_password)

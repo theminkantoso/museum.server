@@ -1,6 +1,8 @@
 import ast
 import random
 import string
+import qrcode
+from datetime import datetime
 
 
 class OrderService():
@@ -34,4 +36,24 @@ class OrderService():
             for x, y in dict_temp.items():
                 dict_out[x] = y
         return dict_out
+
+    @staticmethod
+    def generate_qr(in_str):
+        qr = qrcode.QRCode(
+            version=1,
+            error_correction=qrcode.constants.ERROR_CORRECT_L,
+            box_size=10,
+            border=4,
+        )
+        qr.add_data(in_str)
+        qr.make(fit=True)
+        return qr
+
+    @staticmethod
+    def convert_date(date):
+        try:
+            out_date = datetime.strptime(date, '%Y-%m-%d').date()
+            return out_date
+        except:
+            return ''
 
