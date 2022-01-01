@@ -60,11 +60,11 @@ class OrderDb(db.Model):
 
     @classmethod
     def find_by_account_ticket(cls, id):
-        return cls.query.filter_by(AccountId=id).filter_by(type=0).first()
+        return cls.query.filter_by(AccountId=id).filter_by(type=0).all()
 
     @classmethod
     def find_by_account_order(cls, id):
-        return cls.query.filter_by(AccountId=id).filter_by(type=1).first()
+        return cls.query.filter_by(AccountId=id).filter_by(type=1).all()
 
     def json(self):
         if self.type == 0:
