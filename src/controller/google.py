@@ -27,10 +27,10 @@ class GoogleLoginAuthorize(Resource):
             access_token = create_access_token(identity=resp['email'].lower())
             return jsonify(access_token=access_token, role=0)
         else:
-            account_create = AccountDb(email=resp['email'].lower(), password=None, RoleId=0, isActivated=1,
+            account_create = AccountDb(email=resp['email'].lower(), password=None, RoleId=1, isActivated=1,
                                        confirmedAt=datetime.now(), GoogleId=resp['id'], CreateAt=datetime.now(),
                                        updatedAt=datetime.now())
             account_create.save_to_db()
             access_token = create_access_token(identity=resp['email'].lower())
-            return jsonify(access_token=access_token, role=0)
+            return jsonify(access_token=access_token, role=1)
 

@@ -70,7 +70,7 @@ class Register(Resource):
             return {'msg': "Invalid email or password"}, 400
         if AccountDb.find_by_email(email.lower()) is not None:
             return {'msg': "An account with this email already existed."}, 400
-        user = AccountDb(email=email.lower(), password=generate_password_hash(password, method='sha256'), RoleId=0,
+        user = AccountDb(email=email.lower(), password=generate_password_hash(password, method='sha256'), RoleId=1,
                          isActivated=0, confirmedAt=None, GoogleId=None, CreateAt=datetime.now(), updatedAt=None)
         token = su.dumps(email.lower(), salt='email-confirm')
         link = url_for('confirmation', token=token, _external=False)
