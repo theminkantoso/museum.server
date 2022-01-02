@@ -30,19 +30,18 @@ class Account(Resource):
         email = data['email']
         password = data['password']
         regex_mail = r'\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b'
-        # pattern_mail = re.compile(regex_mail)
         if not AccountService.validate_regex(email.lower(), regex_mail) or not password.isalnum():
-            return {'msg': "Invalid email or password"}, 401
+            return {'msg': "Sai tài khoản hoặc mật khẩu"}, 400
         if AccountDb.find_by_email(email.lower()) is None:
-            return {'msg': "Incorrect username or password"}, 401
+            return {'msg': "Sai tài khoản hoặc mật khẩu"}, 401
         user = AccountDb.find_by_email(email.lower())
         if check_password_hash(user.Password, password):
             if user.isActivated:
                 access_token = create_access_token(identity=email.lower())
                 return jsonify(access_token=access_token, role=user.RoleId)
             else:
-                return {"msg": "Please confirm your account via your email"}, 401
-        return {"msg": "Incorrect username or password"}, 401
+                return {"msg": "Hãy xác nhận tài khoản qua hộp mail của bạn"}, 401
+        return {"msg": "Sai tài khoản hoặc mật khẩu"}, 401
 
     def delete(self):
         return {'msg': 'Not allowed'}, 404
@@ -64,25 +63,23 @@ class Register(Resource):
         email = data['email']
         password = data['password']
         regex_mail = r'\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b'
-        # pattern_mail = re.compile(regex_mail)
-        # if not pattern_mail.fullmatch(email.lower()) or not password.isalnum():
         if not AccountService.validate_regex(email.lower(), regex_mail) or not password.isalnum():
-            return {'msg': "Invalid email or password"}, 400
+            return {'msg': "Sai tài khoản hoặc mật khẩu"}, 400
         if AccountDb.find_by_email(email.lower()) is not None:
-            return {'msg': "An account with this email already existed."}, 400
+            return {'msg': "Tài khoản đã tồn tại"}, 400
         user = AccountDb(email=email.lower(), password=generate_password_hash(password, method='sha256'), RoleId=1,
                          isActivated=0, confirmedAt=None, GoogleId=None, CreateAt=datetime.now(), updatedAt=None)
         token = su.dumps(email.lower(), salt='email-confirm')
         link = url_for('confirmation', token=token, _external=False)
         try:
             msg = Message('Confirm Email', sender=os.environ.get('MAIL'), recipients=[email.lower()])
-            msg.body = 'Your link is http://127.0.0.1:5000{}'.format(link)
+            msg.body = 'Click vào link http://127.0.0.1:5000{}'.format(link)
             my_mail.send(msg)
             user.save_to_db()
         except Exception as e:
             print(e)
-            return {'msg': "Unable to send confirmation mail"}, 400
-        return {'msg': "Register success"}, 200
+            return {'msg': "Lỗi không thể gửi mail xác nhận"}, 400
+        return {'msg': "Đăng ký thành công"}, 200
 
     def delete(self):
         return {'msg': 'Not allowed'}, 404
@@ -101,9 +98,8 @@ class Confirmation(Resource):
             get_user.updatedAt = datetime.now()
             get_user.commit_to_db()
         except SignatureExpired:
-            return {'msg': "The token is expired!"}, 400
-        # update email to true
-        return {'msg': "Activated succeed"}, 200
+            return {'msg': "Hết hạn"}, 400
+        return {'msg': "Kích hoạt thành công"}, 200
 
 
 class Repass(Resource):
@@ -114,24 +110,22 @@ class Repass(Resource):
         data = Repass.parser.parse_args()
         email = data['email']
         regex_mail = r'\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b'
-        # pattern_mail = re.compile(regex_mail)
-        # if not pattern_mail.fullmatch(email.lower()):
         if not AccountService.validate_regex(email.lower(), regex_mail):
-            return {'msg': "Invalid email"}, 400
+            return {'msg': "Mail sai định dạng"}, 400
         if AccountDb.find_by_email(email.lower()) is None:
-            return {'msg': "No account with this email"}, 400
+            return {'msg': "Tài khoản không tồn tại"}, 400
         try:
             get_user = AccountDb.find_by_email(email)
             new_password = AccountService.random_string()
             get_user.Password = generate_password_hash(new_password, method='sha256')
-            msg = Message('New Password Recovery', sender=os.environ.get('MAIL'), recipients=[email.lower()])
-            msg.body = 'Your new password is {}'.format(new_password)
+            msg = Message('Mật khẩu khôi phục', sender=os.environ.get('MAIL'), recipients=[email.lower()])
+            msg.body = 'Mật khẩu mới của bạn là {}'.format(new_password)
             my_mail.send(msg)
             get_user.updatedAt = datetime.now()
             get_user.commit_to_db()
         except:
-            return {'msg': "Unable to send confirmation mail"}, 400
-        return {'msg': "New password sent to your mailbox!"}, 200
+            return {'msg': "Không thể gửi mail xác nhận"}, 400
+        return {'msg': "Mật khẩu mới đã được gửi về mail của bạn!"}, 200
 
 
 class ChangePass(Resource):
@@ -147,15 +141,15 @@ class ChangePass(Resource):
         new_password = data['newpassword']
         re_new_password = data['renewpassword']
         if new_password != re_new_password:
-            return {'msg': "Not matching new password"}, 400
+            return {'msg': "Nhập lại mật khẩu không khớp"}, 400
         email = get_jwt_identity()
         get_user = AccountDb.find_by_email(email)
         if check_password_hash(get_user.Password, password):
             get_user.Password = generate_password_hash(new_password, method='sha256')
             get_user.updatedAt = datetime.now()
             get_user.commit_to_db()
-            return {'msg': "New password saved succeed!"}, 200
-        return {'msg': "Wrong password"}, 400
+            return {'msg': "Lưu mật khẩu mới thành công"}, 200
+        return {'msg': "Sai mật khẩu"}, 400
 
 
 class UserLogoutAccess(Resource):
@@ -165,14 +159,7 @@ class UserLogoutAccess(Resource):
 
     @jwt_required()
     def post(self):
-
-        # jti = get_raw_jwt()['jti']
         jti = get_jwt()['jti']
-        # revoked_token = RevokedTokenModel(jti=jti)
-        #
-        # revoked_token.add()
-        #
-        # return {'message': 'Access token has been revoked'}, 200
         try:
             # Revoking access token
             revoked_token = RevokedTokenModel(jti=jti)

@@ -24,6 +24,9 @@ class GoogleLoginAuthorize(Resource):
         resp = google.get('userinfo').json()
         account = AccountDb.find_by_email(resp['email'])
         if account is not None:
+            if account.GoogleId is None:
+                account.GoogleId = resp['id']
+                account.commit_to_db()
             access_token = create_access_token(identity=resp['email'].lower())
             return jsonify(access_token=access_token, role=0)
         else:

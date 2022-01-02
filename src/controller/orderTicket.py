@@ -111,11 +111,11 @@ class OrderQR(Resource):
         today = date.today()
         if qr_check is not None:
             if today < qr_check.OrderDate:
-                return {'msg': 'Not today yet', 'order_date': qr_check.OrderDate.isoformat()}, 200
+                return {'msg': 'Chưa đến ngày trên vé', 'order_date': qr_check.OrderDate.isoformat()}, 200
             elif today > qr_check.OrderDate:
                 qr_check.used = True
                 qr_check.commit_to_db()
-                return {'msg': 'Da qua ngay dat ve', 'order_date': qr_check.OrderDate.isoformat()}, 200
+                return {'msg': 'Đã quá ngày trên vé', 'order_date': qr_check.OrderDate.isoformat()}, 200
             else:
                 if not qr_check.used:
                     qr_check.used = True
@@ -129,8 +129,8 @@ class OrderQR(Resource):
                         return {'msg': 'success', 'order_date': qr_check.OrderDate.isoformat(),
                                 'order_detail': OrderService.convert_to_dict_souvenir(order_detail)}, 200
                 else:
-                    return {'msg': 'Ban da dung ve nay roi!'}, 200
-        return {'message': 'no order matching'}, 404
+                    return {'msg': 'Bạn đã dùng vé này rồi!'}, 200
+        return {'message': 'Không có đơn đặt nào được tìm thấy'}, 404
 
 
 class TicketOrders(Resource):
