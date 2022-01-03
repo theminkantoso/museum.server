@@ -53,7 +53,7 @@ class OrderDb(db.Model):
 
     @staticmethod
     def qr_detail_order_sou(qr):
-        return db.session.query(OrderSouvernirDetailDb.Quantity, SouvenirDb.Description).\
+        return db.session.query(OrderSouvernirDetailDb.Quantity, SouvenirDb.Name).\
             select_from(OrderDb).join(OrderSouvernirDetailDb, OrderDb.OrderId == OrderSouvernirDetailDb.OrderId). \
             join(SouvenirDb, OrderSouvernirDetailDb.SouvernirId == SouvenirDb.SouvenirId).filter(OrderDb.QRCode == qr).\
             filter(OrderDb.type == 1).all()
@@ -65,6 +65,43 @@ class OrderDb(db.Model):
     @classmethod
     def find_by_account_order(cls, id):
         return cls.query.filter_by(AccountId=id).filter_by(type=1).all()
+
+    @staticmethod
+    def stats_order_all():
+        return db.session.query(db.func.sum(OrderSouvernirDetailDb.Quantity), SouvenirDb.Name).\
+            select_from(OrderDb).join(OrderSouvernirDetailDb, OrderDb.OrderId == OrderSouvernirDetailDb.OrderId).\
+            join(SouvenirDb, OrderSouvernirDetailDb.SouvenirId == SouvenirDb.SouvenirId).\
+            group_by(SouvenirDb.SouvenirId).filter(OrderDb.type == 1).all()
+
+    @staticmethod
+    def stats_order_by_date(date):
+        return db.session.query(db.func.sum(OrderSouvernirDetailDb.Quantity), SouvenirDb.Name). \
+            select_from(OrderDb).join(OrderSouvernirDetailDb, OrderDb.OrderId == OrderSouvernirDetailDb.OrderId). \
+            join(SouvenirDb, OrderSouvernirDetailDb.SouvenirId == SouvenirDb.SouvenirId). \
+            group_by(SouvenirDb.SouvenirId).filter(OrderDb.type == 1).filter(OrderDb.OrderDate == date).all()
+
+    @staticmethod
+    def stats_ticket_all():
+        return db.session.query(db.func.sum(TicketDb.NumberPerson), AgeGroupDb.Description). \
+            select_from(OrderDb).join(TicketDb, OrderDb.OrderId == TicketDb.OrderId). \
+            join(AgeGroupDb, TicketDb.TicketType == AgeGroupDb.GroupId).\
+            group_by(AgeGroupDb.GroupId).filter(OrderDb.type == 0).all()
+
+    @staticmethod
+    def stats_ticket_by_date(date):
+        return db.session.query(db.func.sum(TicketDb.NumberPerson), AgeGroupDb.Description). \
+            select_from(OrderDb).join(TicketDb, OrderDb.OrderId == TicketDb.OrderId). \
+            join(AgeGroupDb, TicketDb.TicketType == AgeGroupDb.GroupId). \
+            group_by(AgeGroupDb.GroupId).filter(OrderDb.type == 0).filter(OrderDb.OrderDate == date).all()
+
+    @staticmethod
+    def total_price_ticket_all():
+        return db.session.query(db.func.sum(OrderDb.TotalPrice)).filter(OrderDb.type == 0).all()
+
+    @staticmethod
+    def total_price_ticket_date(date):
+        return db.session.query(db.func.sum(OrderDb.TotalPrice)).filter(OrderDb.type == 0).\
+            filter(OrderDb.OrderDate == date).all()
 
     def json(self):
         if self.type == 0:

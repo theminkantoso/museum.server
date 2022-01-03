@@ -28,9 +28,9 @@ class OrderSouvenir(Resource):
         order_date = data['order_date']
         dict_in = OrderService.convert_to_dict_sou(in_arr)
         try:
-            order_date = OrderService.convert_date(order_date)
-            if order_date == '':
-                return {'msg': 'Invalid input'}, 400
+            # order_date = OrderService.convert_date(order_date)
+            # if order_date == '':
+            #     return {'msg': 'Invalid input'}, 400
             qrcode_str = OrderService.random_string()
 
             # prevent duplicate
@@ -48,14 +48,6 @@ class OrderSouvenir(Resource):
                 order_sou_models.save_to_db()
 
             qr = OrderService.generate_qr(qrcode_str)
-            # qr = qrcode.QRCode(
-            #     version=1,
-            #     error_correction=qrcode.constants.ERROR_CORRECT_L,
-            #     box_size=10,
-            #     border=4,
-            # )
-            # qr.add_data(qrcode_str)
-            # qr.make(fit=True)
             img = qr.make_image(fill_color="black", back_color="white")
 
             buffer = BytesIO()

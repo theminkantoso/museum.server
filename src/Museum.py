@@ -11,6 +11,7 @@ from src.controller.account import Account, Register, Confirmation, Repass, Chan
 from src.controller.orderTicket import OrderTicket, OrderQR, TicketOrders, TicketOrdersId
 from src.controller.order_souvenir import OrderSouvenir, SouvenirOrders, SouvenirOrdersId
 from src.controller.google import Google, GoogleLoginAuthorize
+from src.controller.statistics import StatisticsOrder, StatisticsTicket
 
 from controller.artifacttypemapping import artifactTypeMapping, artifactTypeMappings, artifactsType
 from controller.accountfavoriteartifact import accountFA, accountFAs
@@ -73,6 +74,9 @@ api.add_resource(SouvenirOrdersId, '/souvenirorders/<int:id>')
 
 api.add_resource(Google, '/google')
 api.add_resource(GoogleLoginAuthorize, '/authorize', endpoint="authorize")
+
+api.add_resource(StatisticsOrder, '/orderstats')
+api.add_resource(StatisticsTicket, '/ticketstats')
 
 
 # flask_jwt_extended == 3.21.0

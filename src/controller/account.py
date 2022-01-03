@@ -7,10 +7,9 @@ from datetime import datetime
 from itsdangerous import URLSafeTimedSerializer, SignatureExpired
 from src.controller import my_mail
 from flask import url_for, jsonify
-# from flask_jwt_extended import create_access_token, jwt_required, current_user, get_jwt_identity, get_raw_jwt
 from flask_jwt_extended import create_access_token, jwt_required, get_jwt_identity, get_jwt
 from flask_mail import Message
-# from src.models.orderDb import OrderDb
+
 from src.services.accountService import AccountService
 
 su = URLSafeTimedSerializer('Thisisasecret!')  # reformat later
@@ -22,7 +21,10 @@ class Account(Resource):
     parser.add_argument('password', type=str)
 
     def get(self):
-        # print(OrderDb.qr_detail_ticket('74o55u395EaXq7R8d1KW')[0][1])
+        # print(OrderDb.stats_order_by_date('2021-12-12T17:42:51.386Z'))
+        str = '2021-12-12T17:42:51.386Z'
+        print(str[0:10])
+        # print(StatisticsService.stats_ticket_all())
         pass
 
     def post(self):
