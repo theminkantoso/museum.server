@@ -15,7 +15,7 @@ def admin_required(func):
         try:
             user_email = get_email_from_jwt_token()
             user = AccountDb.find_by_email(user_email)
-            if user.RoleId != 1:
+            if user.RoleId != 0:
                 raise Exception()
         except:
             return {'msg': "You are not authorized to edit"}, 403
