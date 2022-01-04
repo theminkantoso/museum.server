@@ -15,8 +15,6 @@ pip install -r requirements.txt
 
 * Setup your OS environment variable, ```MAIL``` is your email and ```PASS``` is your Gmail password
 
-* Setup your Google GCP Console Credentials, with ```'/'``` route as default and ```'/authorize'``` as redirect, then setup your OS environment variable ```'GOOGLE_CLIENT_ID``` as your client_id and ```GOOGLE_CLIENT_SECRET``` as your client_secret
-
 * Create a ```museum``` database in your MySQL server, then import schema file ```museum.sql``` and data file ```data.sql```
 
 ## Run
