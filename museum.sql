@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jan 01, 2022 at 11:51 AM
+-- Generation Time: Jan 04, 2022 at 11:22 AM
 -- Server version: 10.4.22-MariaDB
 -- PHP Version: 8.1.1
 
@@ -130,9 +130,9 @@ CREATE TABLE `entryticket` (
 
 CREATE TABLE `image` (
   `ImageId` int(4) NOT NULL,
-  `Name` varchar(100) NOT NULL,
+  `Name` varchar(22) NOT NULL,
   `Content` varchar(100) DEFAULT NULL,
-  `Url` blob DEFAULT NULL,
+  `Url` varchar(1000) DEFAULT NULL,
   `Path` varchar(100) DEFAULT NULL,
   `MimeType` varchar(20) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;

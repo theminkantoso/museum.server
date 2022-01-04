@@ -10,7 +10,7 @@ from controller.artifacttype import artifactType, artifactTypes
 from src.controller.account import Account, Register, Confirmation, Repass, ChangePass, UserLogoutAccess
 from src.controller.orderTicket import OrderTicket, OrderQR, TicketOrders, TicketOrdersId
 from src.controller.order_souvenir import OrderSouvenir, SouvenirOrders, SouvenirOrdersId
-from src.controller.google import Google, GoogleLoginAuthorize
+from src.controller.google import Google
 from src.controller.statistics import StatisticsOrder, StatisticsTicket
 
 from controller.artifacttypemapping import artifactTypeMapping, artifactTypeMappings, artifactsType
@@ -73,7 +73,7 @@ api.add_resource(SouvenirOrdersId, '/souvenirorders/<int:id>')  # Thông tin c�
 api.add_resource(OrderQR, '/checkorder')  # admin quét QR
 
 api.add_resource(Google, '/google')
-api.add_resource(GoogleLoginAuthorize, '/authorize', endpoint="authorize")
+# api.add_resource(GoogleLoginAuthorize, '/authorize', endpoint="authorize")
 
 api.add_resource(StatisticsOrder, '/orderstats')
 api.add_resource(StatisticsTicket, '/ticketstats')
