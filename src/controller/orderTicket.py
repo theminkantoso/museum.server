@@ -3,6 +3,7 @@ from flask_restful import Resource, reqparse
 from io import BytesIO
 from flask import send_file
 from flask_jwt_extended import jwt_required, get_jwt_identity, get_jwt
+from src.core.auth import admin_required
 
 from src.models.ticketDb import TicketDb
 from src.models.orderDb import OrderDb
@@ -96,6 +97,8 @@ class OrderQR(Resource):
     parser = reqparse.RequestParser()
     parser.add_argument('qrcode')
 
+    @jwt_required()
+    @admin_required
     def post(self):
         data = OrderQR.parser.parse_args()
         qrcode = data['qrcode']
@@ -140,6 +143,10 @@ class TicketOrdersId(Resource):
 
     @jwt_required()
     def get(self, id):
+        email_acc = get_jwt_identity()
+        account_now = OrderService.get_account(email_acc)
+        if not OrderService.order_req_validate(id, account_now.AccountId):
+            return {'msg': 'not authorized'}, 403
         try:
             # return send_file('./statics/images/qr_code_ticket/qr' + str(id) + '.jpeg', mimetype='image/jpeg',
             #                  as_attachment=True, download_name=OrderService.random_string() + '.jpeg')

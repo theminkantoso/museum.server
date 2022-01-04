@@ -78,6 +78,10 @@ class SouvenirOrdersId(Resource):
 
     @jwt_required()
     def get(self, id):
+        email_acc = get_jwt_identity()
+        account_now = OrderService.get_account(email_acc)
+        if not OrderService.order_req_validate(id, account_now.AccountId):
+            return {'msg': 'not authorized'}, 403
         try:
             # return send_file('./statics/images/qr_code_order/qr' + str(id) + '.jpeg', mimetype='image/jpeg',
             #                  as_attachment=True, download_name=OrderService.random_string() + '.jpeg')

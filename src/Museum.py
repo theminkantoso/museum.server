@@ -64,13 +64,13 @@ api.add_resource(artifactsType, '/artifactsType/<int:id>')
 api.add_resource(accountFA, '/accountFA/<int:AccId>&<int:id>', '/accountFA')
 api.add_resource(accountFAs, '/accountFAs/<int:AccId>')  # phân loại theo account
 
-api.add_resource(OrderTicket, '/orderticket')
-api.add_resource(OrderQR, '/checkorder')
-api.add_resource(TicketOrders, '/ticketorders')
-api.add_resource(TicketOrdersId, '/ticketorders/<int:id>')
-api.add_resource(OrderSouvenir, '/souvenirorder')
-api.add_resource(SouvenirOrders, '/souvenirorders')
-api.add_resource(SouvenirOrdersId, '/souvenirorders/<int:id>')
+api.add_resource(OrderTicket, '/orderticket')  # Đặt vé
+api.add_resource(TicketOrders, '/ticketorders')  # Danh sách vé đã đặt
+api.add_resource(TicketOrdersId, '/ticketorders/<int:id>')  # Thông tin cụ thể 1 vé
+api.add_resource(OrderSouvenir, '/ordersouvenir')  # Đặt đồ lưu niệm
+api.add_resource(SouvenirOrders, '/souvenirorders')  # Danh sách đơn đặt đồ lưu niệm
+api.add_resource(SouvenirOrdersId, '/souvenirorders/<int:id>')  # Thông tin cụ thể 1 đơn đặt
+api.add_resource(OrderQR, '/checkorder')  # admin quét QR
 
 api.add_resource(Google, '/google')
 api.add_resource(GoogleLoginAuthorize, '/authorize', endpoint="authorize")

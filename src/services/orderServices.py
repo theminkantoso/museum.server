@@ -5,6 +5,7 @@ import qrcode
 from datetime import datetime
 
 from src.models.orderDb import OrderDb
+from src.models.accountDb import AccountDb
 
 
 class OrderService():
@@ -72,4 +73,16 @@ class OrderService():
             "TotalPrice": order.TotalPrice,
             "CreatedAt": order.CreatedAt
         }
+
+    @staticmethod
+    def order_req_validate(id, id_acc):
+        order_check = OrderDb.find_by_id(id)
+        if order_check.AccountId != id_acc:
+            return False
+        return True
+
+    @staticmethod
+    def get_account(email):
+        return AccountDb.find_by_email(email)
+
 

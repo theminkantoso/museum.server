@@ -41,6 +41,10 @@ class OrderDb(db.Model):
         db.session.commit()
 
     @classmethod
+    def find_by_id(cls, id):
+        return cls.query.filter_by(OrderId=id).first()
+
+    @classmethod
     def find_by_qr(cls, qr):
         return cls.query.filter_by(QRCode=qr).first()
 
