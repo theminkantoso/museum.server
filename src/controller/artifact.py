@@ -1,9 +1,12 @@
 from flask import request, jsonify
 from flask_restful import Resource, reqparse
 from src.services.artifactService import ArtifactService
+from src.core.auth import admin_required
+from flask_jwt_extended import jwt_required
 
 
 class artifact(Resource):
+    @jwt_required()
     def get(self, id):
         atf = ArtifactService.artifact_exist(id)
         if atf == 0:
@@ -13,6 +16,8 @@ class artifact(Resource):
         else:
             return {'message': 'Artifact not found'}, 404
 
+    @jwt_required()
+    @admin_required
     def post(self):
         parser = reqparse.RequestParser()
         parser.add_argument('ArtifactId', type=int)
@@ -29,6 +34,8 @@ class artifact(Resource):
         else:
             return {"message": "Artifact added."}, 200
 
+    @jwt_required()
+    @admin_required
     def delete(self, id):
         atf = ArtifactService.delete_artifact(id)
         if atf == 0:
@@ -40,6 +47,8 @@ class artifact(Resource):
         else:
             return {'message': 'Artifact not found.'}, 404
 
+    @jwt_required()
+    @admin_required
     def put(self, id):
         parser = reqparse.RequestParser()
         parser.add_argument('Name', type=str)
@@ -58,6 +67,7 @@ class artifact(Resource):
 
 
 class artifacts(Resource):
+    @jwt_required()
     def get(self):
         atf = ArtifactService.all_artifact()
         return atf, 200

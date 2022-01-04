@@ -1,4 +1,5 @@
 from flask_jwt_extended import get_jwt_identity, jwt_required
+from src.core.auth import admin_required
 
 from flask_restful import Resource, reqparse
 from src.services.notificationServices import NotificationService
@@ -47,7 +48,6 @@ class notification(Resource):
         else:
             return {'message': 'not found.'}, 404
 
-
     @jwt_required()
     def delete(self, Id):
         noti = NotificationService.delete_notification(Id)
@@ -68,6 +68,7 @@ class NotificationsAll(Resource):
     parser.add_argument('Content', type=str)
 
     @jwt_required()
+    @admin_required
     def post(self):
         data = NotificationsAll.parser.parse_args()
         noti = NotificationService.add_notification_all(data)

@@ -1,9 +1,11 @@
 from src.services.souvenirService import SouvenirService
 from flask_restful import Resource, reqparse
+from src.core.auth import admin_required
+from flask_jwt_extended import jwt_required
 
 
 class souvenir(Resource):
-
+    @jwt_required()
     def get(self, id):
         sou = SouvenirService.souvenir_exist(id)
         if sou == 0:
@@ -12,6 +14,8 @@ class souvenir(Resource):
             return sou, 200
         return {'message': 'Souvenir not found'}, 404
 
+    @jwt_required()
+    @admin_required
     def post(self):
         parser = reqparse.RequestParser()
         parser.add_argument('SouvenirId', type=int)
@@ -28,6 +32,8 @@ class souvenir(Resource):
         else:
             return {"message": "An error occurred inserting the souvenir."}, 500
 
+    @jwt_required()
+    @admin_required
     def delete(self, id):
         sou = SouvenirService.delete_souvenir(id)
         if sou == 0:
@@ -39,6 +45,8 @@ class souvenir(Resource):
         else:
             return {'message': 'Souvenir not found.'}, 404
 
+    @jwt_required()
+    @admin_required
     def put(self, id):
         parser = reqparse.RequestParser()
         parser.add_argument('Name', type=str)
@@ -57,6 +65,7 @@ class souvenir(Resource):
 
 
 class souvenirs(Resource):
+    @jwt_required()
     def get(self):
         sou = SouvenirService.all_souvenir()
         return sou, 200
