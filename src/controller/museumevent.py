@@ -1,9 +1,11 @@
 from flask_restful import Resource, reqparse
 from src.services.eventService import EventService
+from src.core.auth import admin_required
+from flask_jwt_extended import jwt_required
 
 
 class Event(Resource):
-
+    @jwt_required()
     def get(self, id):
         evt = EventService.event_exist(id)
         if evt == 0:
@@ -13,6 +15,8 @@ class Event(Resource):
         else:
             return {'message': 'Event not found'}, 404
 
+    @jwt_required()
+    @admin_required
     def post(self):
         parser = reqparse.RequestParser()
         parser.add_argument('EventId', type=int)
@@ -31,6 +35,8 @@ class Event(Resource):
         else:
             return {"message": "An error occurred inserting the event."}, 500
 
+    @jwt_required()
+    @admin_required
     def delete(self, id):
         evt = EventService.delete_event(id)
         if evt == 0:
@@ -42,6 +48,8 @@ class Event(Resource):
         else:
             return {'message': 'Event not found.'}, 404
 
+    @jwt_required()
+    @admin_required
     def put(self, id):
         parser = reqparse.RequestParser()
         parser.add_argument('Name', type=str)
@@ -62,6 +70,7 @@ class Event(Resource):
 
 
 class Events(Resource):
+    @jwt_required()
     def get(self):
         evt = EventService.all_event()
         return evt, 200
