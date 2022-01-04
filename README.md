@@ -31,3 +31,6 @@ src---
   |- database.py // connecting flask to MySQL database
 ```
 
+## Link repository cũ
+Vì lý do lỗi file dịch pyc không đưa vào gitignore, nhóm server đã phải đổi repository mới. Thầy có thể xem repository cũ tại [đây](https://github.com/tuyenshin2004/MuseumBackend)
+
