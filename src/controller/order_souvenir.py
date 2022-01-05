@@ -11,6 +11,20 @@ from src.models.accountDb import AccountDb
 from src.services.orderServices import OrderService
 
 
+def json1(order):
+    if isinstance(order.OrderDate, date):
+        order.OrderDate = order.OrderDate.strftime("%Y-%m-%d")
+    if isinstance(order.CreatedAt, date):
+        order.CreatedAt = order.CreatedAt.strftime("%Y-%m-%d")
+
+    return {
+        "OrderId": order.OrderId,
+        "OrderDate": order.OrderDate,
+        "TotalPrice": order.TotalPrice,
+        "CreatedAt": order.CreatedAt
+    }
+
+
 class OrderSouvenir(Resource):
 
     def get(self):
@@ -70,8 +84,8 @@ class SouvenirOrders(Resource):
         email = get_jwt_identity()
         account = AccountDb.find_by_email(email)
         orders = OrderDb.find_by_account_order(account.AccountId)
-        return {'orders': list(map(lambda x: x.json(), orders))}, 200
-        # return {'orders': list(map(lambda x: x.json1(), orders))}, 200
+        # return {'orders': list(map(lambda x: x.json(), orders))}, 200
+        return {'orders': list(map(lambda x: x.json1(), orders))}, 200
 
 
 class SouvenirOrdersId(Resource):

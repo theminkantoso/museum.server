@@ -13,9 +13,9 @@ from src.services.orderServices import OrderService
 
 
 def json1(order):
-    if isinstance(order.OrderDate, datetime.date):
+    if isinstance(order.OrderDate, date):
         order.OrderDate = order.OrderDate.strftime("%Y-%m-%d")
-    if isinstance(order.CreatedAt, datetime.date):
+    if isinstance(order.CreatedAt, date):
         order.CreatedAt = order.CreatedAt.strftime("%Y-%m-%d")
 
     return {
