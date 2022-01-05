@@ -16,7 +16,7 @@ class EventService:
 
     @staticmethod
     def event_exist(id: int):
-        if not validate_regex(id, regex_id):
+        if not validate_regex(str(id), regex_id):
             return 0
         evt = Museumevent.find_by_id(id)
         if evt:
@@ -36,7 +36,7 @@ class EventService:
 
     @staticmethod
     def delete_event(id: int):
-        if not validate_regex(id, regex_id):
+        if not validate_regex(str(id), regex_id):
             return 0
         evt = Museumevent.find_by_id(id)
         if evt:
@@ -49,7 +49,7 @@ class EventService:
 
     @staticmethod
     def update_event(id: int, data: dict):
-        if not validate_regex(id, regex_id):
+        if not validate_regex(str(id), regex_id):
             return 0
         evt = Museumevent.find_by_id(id)
         if not evt:
