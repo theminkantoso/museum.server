@@ -59,7 +59,7 @@ class OrderDb(db.Model):
     def qr_detail_order_sou(qr):
         return db.session.query(OrderSouvernirDetailDb.Quantity, SouvenirDb.Name).\
             select_from(OrderDb).join(OrderSouvernirDetailDb, OrderDb.OrderId == OrderSouvernirDetailDb.OrderId). \
-            join(SouvenirDb, OrderSouvernirDetailDb.SouvernirId == SouvenirDb.SouvenirId).filter(OrderDb.QRCode == qr).\
+            join(SouvenirDb, OrderSouvernirDetailDb.SouvenirId == SouvenirDb.SouvenirId).filter(OrderDb.QRCode == qr).\
             filter(OrderDb.type == 1).all()
 
     @classmethod
