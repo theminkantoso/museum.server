@@ -4,7 +4,7 @@ from src.services.statisticsService import StatisticsService
 
 class StatisticsOrder(Resource):
 
-    def get(self):
+    def post(self):
         parser = reqparse.RequestParser()
         parser.add_argument('order_date')
         data = parser.parse_args()
@@ -18,7 +18,7 @@ class StatisticsOrder(Resource):
 
 class StatisticsTicket(Resource):
 
-    def get(self):
+    def post(self):
         parser = reqparse.RequestParser()
         parser.add_argument('order_date')
         data = parser.parse_args()
