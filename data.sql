@@ -30,7 +30,8 @@ INSERT INTO `account` (`AccountId`, `email`, `Password`, `RoleId`, `isActivated`
 (2, 'chucthanh0411@gmail.com', NULL, 1, 1, '2022-01-08 09:14:03', '105750002084628690010', '2022-01-08', '2022-01-08'),
 (3, 'teammuseummobile@gmail.com', 'sha256$xDP4VFr2IYDP5wot$22dd86aff170f69bddbd72449eee751f0a658f670fefd3f7ce7714b9a3a990a4', 0, 1, '2022-01-08 09:17:47', NULL, '2022-01-08', NULL),
 (6, 'thumomm10@gmail.com', 'sha256$oIWy4oo437YG9tpg$769a97f7acdfbec1fea0ddf98efc213453ef2e8531add1f5b72ea0e80bd5559c', 1, 1, '2022-01-08 10:32:52', NULL, '2022-01-08', NULL),
-(7, 'parkingwebtest@gmail.com', NULL, 1, 1, '2022-01-08 15:30:06', '117163305074459229352', '2022-01-08', '2022-01-08');
+(7, 'parkingwebtest@gmail.com', NULL, 1, 1, '2022-01-08 15:30:06', '117163305074459229352', '2022-01-08', '2022-01-08'),
+(8, 'phucpb.hrt@gmail.com', 'sha256$iUtOAp2l3Fot4W6j$e865a998d8ab5d9b98db60448d64b33892e4790863c80bfa42c0de4c80886595', 0, 1, '2021-12-28 19:28:18', NULL, NULL, NULL);
 
 --
 -- Đang đổ dữ liệu cho bảng `agegroup`
