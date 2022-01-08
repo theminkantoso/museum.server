@@ -3,9 +3,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- Máy chủ: 127.0.0.1
--- Thời gian đã tạo: Th1 04, 2022 lúc 06:07 PM
+-- Thời gian đã tạo: Th1 08, 2022 lúc 04:54 PM
 -- Phiên bản máy phục vụ: 10.4.17-MariaDB
--- Phiên bản PHP: 7.4.15
+-- Phiên bản PHP: 8.0.2
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -26,7 +26,11 @@ SET time_zone = "+00:00";
 --
 
 INSERT INTO `account` (`AccountId`, `email`, `Password`, `RoleId`, `isActivated`, `confirmedAt`, `GoogleId`, `CreateAt`, `UpdateAt`) VALUES
-(1, 'trangco19621962@gmail.com', 'sha256$iUtOAp2l3Fot4W6j$e865a998d8ab5d9b98db60448d64b33892e4790863c80bfa42c0de4c80886595', 1, 1, '2021-12-28 19:28:18', NULL, NULL, NULL);
+(1, 'trangco19621962@gmail.com', 'sha256$iUtOAp2l3Fot4W6j$e865a998d8ab5d9b98db60448d64b33892e4790863c80bfa42c0de4c80886595', 0, 1, '2021-12-28 19:28:18', NULL, NULL, NULL),
+(2, 'chucthanh0411@gmail.com', NULL, 1, 1, '2022-01-08 09:14:03', '105750002084628690010', '2022-01-08', '2022-01-08'),
+(3, 'teammuseummobile@gmail.com', 'sha256$xDP4VFr2IYDP5wot$22dd86aff170f69bddbd72449eee751f0a658f670fefd3f7ce7714b9a3a990a4', 0, 1, '2022-01-08 09:17:47', NULL, '2022-01-08', NULL),
+(6, 'thumomm10@gmail.com', 'sha256$oIWy4oo437YG9tpg$769a97f7acdfbec1fea0ddf98efc213453ef2e8531add1f5b72ea0e80bd5559c', 1, 1, '2022-01-08 10:32:52', NULL, '2022-01-08', NULL),
+(7, 'parkingwebtest@gmail.com', NULL, 1, 1, '2022-01-08 15:30:06', '117163305074459229352', '2022-01-08', '2022-01-08');
 
 --
 -- Đang đổ dữ liệu cho bảng `agegroup`
@@ -121,7 +125,31 @@ INSERT INTO `entryticket` (`TicketId`, `OrderId`, `NumberPerson`, `TicketType`) 
 (63, 1, 3, 3),
 (64, 24, 2, 1),
 (65, 24, 2, 2),
-(66, 24, 3, 3);
+(66, 24, 3, 3),
+(67, 27, 6, 1),
+(68, 27, 1, 2),
+(69, 27, 0, 3),
+(70, 31, 2, 1),
+(71, 31, 2, 2),
+(72, 31, 0, 3),
+(73, 32, 2, 1),
+(74, 32, 2, 2),
+(75, 32, 1, 3),
+(76, 33, 2, 1),
+(77, 33, 2, 2),
+(78, 33, 1, 3),
+(79, 34, 2, 1),
+(80, 34, 1, 2),
+(81, 34, 0, 3),
+(82, 35, 3, 1),
+(83, 35, 0, 2),
+(84, 35, 2, 3),
+(85, 39, 5, 1),
+(86, 39, 0, 2),
+(87, 39, 0, 3),
+(88, 40, 4, 1),
+(89, 40, 0, 2),
+(90, 40, 0, 3);
 
 --
 -- Đang đổ dữ liệu cho bảng `image`
@@ -145,7 +173,10 @@ INSERT INTO `image` (`ImageId`, `Name`, `Content`, `Url`, `Path`, `MimeType`) VA
 (15, 'non_la.jpg', '', 'non_la.jpg', 'statics/images/non_la.jpg', 'image/jpeg'),
 (16, 'Tranh_cat.jpg', '', 'Tranh_cat.jpg', 'statics/images/Tranh_cat.jpg', 'image/jpeg'),
 (17, 'su_kien_ky_uc_di_san.jpg', '', 'su_kien_ky_uc_di_san.jpg', 'statics/images/su_kien_ky_uc_di_san.jpg', 'image/jpeg'),
-(18, 'Ho_Chi_Minh.jpg', '', 'Ho_Chi_Minh.jpg', 'statics/images/Ho_Chi_Minh.jpg', 'image/jpeg');
+(18, 'Ho_Chi_Minh.jpg', '', 'Ho_Chi_Minh.jpg', 'statics/images/Ho_Chi_Minh.jpg', 'image/jpeg'),
+(19, 'received_2071648996323187.webp', '', 'received_2071648996323187.webp', 'statics/images/received_2071648996323187.webp', 'image/webp'),
+(20, 'received_664704937895346.webp', '', 'received_664704937895346.webp', 'statics/images/received_664704937895346.webp', 'image/webp'),
+(22, 'received_1059532698222583.webp', '', 'received_1059532698222583.webp', 'statics/images/received_1059532698222583.webp', 'image/webp');
 
 --
 -- Đang đổ dữ liệu cho bảng `museumevent`
@@ -156,12 +187,88 @@ INSERT INTO `museumevent` (`EventId`, `Name`, `Description`, `OpenTime`, `CloseT
 (2, 'Sự kiện Nguyễn Tất Thành - Hồ Chí Minh đi tìm đường cứu nước.Ý nghĩa lịch sử và giá trị thời đại', 'Kỷ niệm 111 năm Ngày Chủ tịch Hồ Chí Minh đi tìm đường cứu nước (5-6-1911/5-6-2022),tổ chức Hội thảo khoa học với chủ đề: “Sự kiện Nguyễn Tất Thành - Hồ Chí Minh đi tìm đường cứu nước. Ý nghĩa lịch sử và giá trị thời đại\"', '08:00:00', '17:30:00', '2022-06-05', 18);
 
 --
+-- Đang đổ dữ liệu cho bảng `notification`
+--
+
+INSERT INTO `notification` (`NotificationId`, `AccountId`, `Title`, `Content`, `Time`, `Unread`) VALUES
+(3, 2, 'Đặt hàng thành công', 'Bạn đã đặt hàng thành công', '2022-01-08 10:51:22', 1),
+(4, 2, 'Đặt hàng thành công', 'Bạn đã đặt hàng thành công', '2022-01-08 10:53:32', 1),
+(5, 2, 'Đặt hàng thành công', 'Bạn đã đặt hàng thành công', '2022-01-08 10:56:44', 0),
+(6, 2, 'Bạn đã đặt vé thành công', 'Bạn đã đặt thành công vé đến tham quan bảo tàng vào ngày 8/1/2022', '2022-01-08 11:08:39', 0),
+(7, 2, 'Bạn đã đặt vé thành công', 'Bạn đã đặt thành công vé đến tham quan bảo tàng vào ngày 8/1/2022', '2022-01-08 11:10:42', 0),
+(8, 2, 'Bạn đã đặt vé thành công', 'Bạn đã đặt thành công vé đến tham quan bảo tàng vào ngày 8/1/2022', '2022-01-08 11:13:25', 0),
+(9, 2, 'Bạn đã đặt vé thành công', 'Bạn đã đặt thành công vé đến tham quan bảo tàng vào ngày 6/1/2022', '2022-01-08 11:17:08', 0),
+(10, 2, 'Bạn đã đặt vé thành công', 'Bạn đã đặt thành công vé đến tham quan bảo tàng vào ngày 7/1/2022', '2022-01-08 11:17:33', 0),
+(11, 2, 'Đặt hàng thành công', 'Bạn đã đặt hàng thành công', '2022-01-08 11:17:57', 0),
+(12, 2, 'Đặt hàng thành công', 'Bạn đã đặt hàng thành công', '2022-01-08 11:18:08', 0),
+(13, 2, 'Đặt hàng thành công', 'Bạn đã đặt hàng thành công', '2022-01-08 11:18:34', 0),
+(14, 2, 'Bạn đã đặt vé thành công', 'Bạn đã đặt thành công vé đến tham quan bảo tàng vào ngày 9/1/2022', '2022-01-08 11:21:24', 0),
+(15, 2, 'Bạn đã đặt vé thành công', 'Bạn đã đặt thành công vé đến tham quan bảo tàng vào ngày 10/1/2022', '2022-01-08 11:22:22', 0),
+(16, 2, 'Đặt hàng thành công', 'Bạn đã đặt hàng thành công', '2022-01-08 11:22:55', 0),
+(17, 1, 'Bảo tàng vừa thêm sự kiện mới', 'Tết Nguyên Đán', '2022-01-08 11:40:24', 0),
+(18, 2, 'Bảo tàng vừa thêm sự kiện mới', 'Tết Nguyên Đán', '2022-01-08 11:40:24', 0),
+(19, 6, 'Bảo tàng vừa thêm sự kiện mới', 'Tết Nguyên Đán', '2022-01-08 11:40:24', 0);
+
+--
 -- Đang đổ dữ liệu cho bảng `orders`
 --
 
 INSERT INTO `orders` (`OrderId`, `OrderDate`, `TotalPrice`, `CreatedAt`, `AccountId`, `QRCode`, `used`, `type`) VALUES
-(1, '2021-12-29', 145000, '2021-12-29', 0, '74o55u395EaXq7R8d1KW', 1, 0),
-(24, '2021-12-12', 145000, '2021-12-29', 1, 'uULR4603p7831pxh8te9', 0, 0);
+(28, '2022-01-08', 0, '2022-01-08', 2, '6n9pL2gZfbo42c4Q0065', 0, 1),
+(29, '2022-01-08', 0, '2022-01-08', 2, 'H1H45r658RJ06PO52lVs', 1, 1),
+(30, '2022-01-08', 0, '2022-01-08', 2, '9d7WpE28Q04D6YRxB148', 1, 1),
+(31, '2022-01-08', 260000, '2022-01-08', 2, '5mvm7G2iX60242M69JzG', 1, 0),
+(32, '2022-01-08', 325000, '2022-01-08', 2, 'WZ8bU8346F87UL85mj4I', 1, 0),
+(33, '2022-01-08', 325000, '2022-01-08', 2, '31Sd0L5O7afEs5347Zx3', 1, 0),
+(34, '2022-01-06', 180000, '2022-01-08', 2, 'Hb5VFSJt80B065552AJ8', 1, 0),
+(35, '2022-01-07', 280000, '2022-01-08', 2, 'TCs6516M08qeq6K81F2d', 1, 0),
+(36, '2022-01-07', 0, '2022-01-08', 2, '3H8138jV8aNfbb0D54o9', 1, 1),
+(37, '2022-01-07', 0, '2022-01-08', 2, 'IDaiw70M0j7Z16C068n9', 1, 1),
+(38, '2022-01-07', 0, '2022-01-08', 2, '97061rnn7Wlq5Mx0f42m', 1, 1),
+(39, '2022-01-09', 250000, '2022-01-08', 2, 'RK2634B59N8J76T1drSj', 0, 0),
+(40, '2022-01-10', 200000, '2022-01-08', 2, '09F8Z099beZ2m4QD7s9F', 0, 0),
+(41, '2022-01-09', 0, '2022-01-08', 2, 'hQZ06w1xsb116462oxf2', 0, 1);
+
+--
+-- Đang đổ dữ liệu cho bảng `orderssouvenirdetail`
+--
+
+INSERT INTO `orderssouvenirdetail` (`OrderId`, `SouvenirId`, `Quantity`) VALUES
+(25, 1, 1),
+(25, 2, 1),
+(25, 3, 2),
+(25, 5, 3),
+(26, 1, 1),
+(26, 3, 5),
+(26, 6, 3),
+(26, 7, 1),
+(26, 8, 3),
+(28, 1, 2),
+(28, 2, 1),
+(28, 3, 2),
+(28, 4, 1),
+(29, 1, 1),
+(29, 2, 1),
+(29, 3, 3),
+(29, 5, 1),
+(30, 1, 2),
+(30, 3, 3),
+(36, 1, 1),
+(36, 2, 1),
+(36, 3, 1),
+(36, 4, 1),
+(36, 5, 3),
+(37, 1, 4),
+(37, 2, 4),
+(37, 3, 1),
+(37, 4, 1),
+(37, 5, 3),
+(38, 1, 2),
+(38, 2, 5),
+(38, 3, 1),
+(38, 4, 3),
+(38, 5, 3),
+(41, 2, 3);
 
 --
 -- Đang đổ dữ liệu cho bảng `souvenir`
@@ -175,7 +282,8 @@ INSERT INTO `souvenir` (`SouvenirId`, `Name`, `Description`, `Price`, `Discount`
 (5, 'Tranh cát', 'Nghệ thuật tranh cát', 50, NULL, 16),
 (6, 'Bút lông viết thư pháp', 'Bút lông viết thư pháp đẹp', 20, NULL, 14),
 (7, 'Nón lá', 'Món đồ lưu niệm đậm chất văn hoá Việt Nam', 50, NULL, 15),
-(8, 'Tranh gỗ treo trường', 'Tranh gỗ đẹp, ý nghĩa, mang lại phongc cách riêng cho ngôi nhà của bạn', 200, NULL, 13);
+(8, 'Tranh gỗ treo trường', 'Tranh gỗ đẹp, ý nghĩa, mang lại phongc cách riêng cho ngôi nhà của bạn', 200, NULL, 13),
+(10, 'Trống đồng mini', 'Trống đồng size nhỏ', 25, NULL, 22);
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
