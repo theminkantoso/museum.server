@@ -85,7 +85,7 @@ class SouvenirOrders(Resource):
         account = AccountDb.find_by_email(email)
         orders = OrderDb.find_by_account_order(account.AccountId)
         # return {'orders': list(map(lambda x: x.json(), orders))}, 200
-        return {'orders': list(map(lambda x: x.json1(), orders))}, 200
+        return {'orders': list(map(lambda x: json1(x), orders))}, 200
 
 
 class SouvenirOrdersId(Resource):
